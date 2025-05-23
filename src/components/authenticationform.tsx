@@ -13,33 +13,27 @@ export default function AuthForm({ signup, func }: SignupType) {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    // const [success, setSuccess] = useState("");
 
 
-    // const errorRemover = () => {
-    //     setTimeout(() => {
-    //         setError("");
-    //     }, 3000);
+
+    // const notifySuccess = () => {
+    //     toast.dismiss()
+    //     if (signup) {
+
+    //         toast.error("Signup successfully", {
+    //             duration: 2000
+    //         })
+
+    //     }
+    //     else {
+
+    //         toast.success("Login successfully", {
+    //             duration: 2000
+    //         })
+
+    //     }
+
     // }
-
-
-    const notifySuccess = () => {
-        if (signup) {
-             toast.dismiss()
-            toast.error("Signup successfully", {
-                duration: 2000
-            })
-
-        }
-        else {
-            toast.dismiss()
-            toast.success("Login successfully", {
-                duration: 2000
-            })
-
-        }
-
-    }
 
     const notifyError = () => {
         toast.dismiss()
@@ -50,29 +44,14 @@ export default function AuthForm({ signup, func }: SignupType) {
 
     const handleSubmit = async () => {
         setError("");
-        setLoading(true);
+        // setLoading(true);
 
-        // if (!taskValue.trim() && !selectedCard) {
-        //     setError('Please enter task and select a card');
-        //     errorRemoverFunc();
-        //     return;
-        // }
 
-        // if (!taskValue.trim()) {
-        //     setError('Please enter a task');
-        //     errorRemoverFunc();
-        //     return;
-        // }
-        // if (!selectedCard || typeof selectedCard !== 'number') {
-        //     setError('Please select a card');
-        //     errorRemoverFunc();
-        //     return;
-        // }
 
         if (!email.trim() && !password.trim()) {
             toast.dismiss()
             toast.error("Please enter email and password", {
-                duration: 2000
+                duration: 1000
             })
 
             return
@@ -80,7 +59,7 @@ export default function AuthForm({ signup, func }: SignupType) {
         if (!email.trim()) {
             toast.dismiss()
             toast.error("Please enter email", {
-                duration: 2000
+                duration: 1000
             })
 
             return
@@ -88,7 +67,7 @@ export default function AuthForm({ signup, func }: SignupType) {
         if (!password.trim()) {
             toast.dismiss()
             toast.error("Please enter password", {
-                duration: 2000
+                duration: 1000
             })
 
             return
@@ -99,11 +78,15 @@ export default function AuthForm({ signup, func }: SignupType) {
             // notifySuccess()
 
             if (error.trim()) {
-                 notifyError()
-                 return
+                notifyError()
+                return;
             }
 
-             notifySuccess()
+            // {
+            //     signup ? toast.success("Sign up successfully") :  toast.success("Sign In successfully")
+            // }
+
+            // notifySuccess()
 
             // toast.dismiss()
 
@@ -129,14 +112,14 @@ export default function AuthForm({ signup, func }: SignupType) {
 
 
                 <label className="items-center">
-                    <div className="text-sm ml-2 mb-1">
-                        Email
+                    <div className="text-xs font-extrabold ml-2 mb-1">
+                        EMAIL
                     </div>
                     <input
                         autoFocus
                         type="text"
-                        className="placeholder-[#dddddd] text-sm mb-4 min-[295px]:w-72 sm:w-80 py-1.5 px-4 bg-[#bb8cd0] focus:outline-none focus:ring-2 focus:ring-[#dddddd] rounded-xl"
-                        placeholder="Type your email"
+                        className="placeholder-[#767676] text-sm mb-4 min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#dddddd] rounded-3xl"
+                        placeholder="Email"
                         value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
@@ -145,14 +128,14 @@ export default function AuthForm({ signup, func }: SignupType) {
                 </label>
 
                 <label className=" items-center">
-                    <div className="text-sm ml-2 mb-1">
+                    <div className="text-xs font-extrabold ml-2 mb-1">
                         Password
                     </div>
 
                     <input
                         type="Type your password"
-                        className="placeholder-[#dddddd] text-sm min-[295px]:w-72 sm:w-80 py-1.5 px-4 bg-[#bb8cd0] focus:outline-none focus:ring-2 focus:ring-[#dddddd] rounded-xl"
-                        placeholder={` Type your password`}
+                        className="placeholder-[#767676] text-sm min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#dddddd] rounded-3xl"
+                        placeholder={`Password`}
                         value={password}
                         onChange={(e) => {
                             setPassword(e.target.value);
@@ -167,7 +150,7 @@ export default function AuthForm({ signup, func }: SignupType) {
                 <div className="flex justify-center mt-6">
 
                     <button
-                        className="cursor-pointer w-32 text-white rounded-xl font-bold md:bg-[#e574bb] min-[295px]:bg-gradient-to-r min-[295px]:from-[#795fc5] min-[295px]:to-[#e574bb] py-1.5 text-center bg-[#bb8cd0] align-middle "
+                        className="cursor-pointer text-white min-[295px]:w-72 rounded-3xl sm:w-80 py-2.5 md:bg-[#e574bb] min-[295px]:bg-gradient-to-r min-[295px]:from-[#795fc5] min-[295px]:to-[#e574bb] bg-[#bb8cd0] "
                         onClick={handleSubmit}
 
                     // disabled={loading}
@@ -178,7 +161,7 @@ export default function AuthForm({ signup, func }: SignupType) {
 
                         {
                             // loading ? "Loading..." :
-                            (signup ? "SIGNUP" : "LOGIN")}
+                            (signup ? "Sign Up" : "Login")}
                     </button>
 
 
@@ -188,10 +171,7 @@ export default function AuthForm({ signup, func }: SignupType) {
 
 
 
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-            />
+            
         </div >
     );
 }

@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged, sendSignInLinkToEmail } from "firebase/aut
 import { app } from "@/firebase/firebaseconfig";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { emailVerification } from "@/firebase/firebaseauth";
 
 
 type UserType = {
@@ -46,13 +47,14 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
                 }
                 else {
                     router.push("/emailverification")
+                    emailVerification()
                 }
 
                 // ...
             } else {
                 // User is signed out
                 setUser(null);
-                router.push("/signup")
+                router.push("/hero")
 
             }
         });

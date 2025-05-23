@@ -5,6 +5,7 @@ import { IoMdAdd } from 'react-icons/io';
 import CardList from './cards';
 import ToggleAddCard from './toggleAddCard';
 import AddTask from './addTask';
+import { DndContext } from 'react-dnd';
 
 type Card = {
     id: number;
@@ -113,6 +114,24 @@ export default function CardTask() {
         }
     }
 
+    const handleDragEnd = (event: any) => {
+        const { active, over } = event;
+        if (!over) return;
+
+        const fromId = parseInt(active.data?.current?.parentId);
+        const toId = parseInt(over.id);
+
+        if (fromId === toId) return;
+
+        const task = active.id;
+        setTasks((prev) => {
+            const newTasks = { ...prev };
+            newTasks[fromId] = newTasks[fromId].filter((t) => t !== task);
+            newTasks[toId] = [...(newTasks[toId] || []), task];
+            return newTasks;
+        });
+    };
+
     return (
         <div className="bg-gradient-to-r from-[#795fc5] to-[#e574bb] min-h-96 pt-10 h-screen w-full">
             <AddTask
@@ -124,6 +143,8 @@ export default function CardTask() {
                 handleAddTask={handleAddTask}
                 error={error}
             />
+
+            {/* <DndContext onDragEnd={handleDragEnd}></DndContext> */}
 
             <div className={`mt-7 mx-14`}>
 
@@ -160,6 +181,7 @@ export default function CardTask() {
                                 </button>
                         }
                     </div>
+                   
                 </div>
 
             </div>
