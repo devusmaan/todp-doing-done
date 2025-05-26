@@ -5,7 +5,8 @@ import { IoMdAdd } from 'react-icons/io';
 import CardList from './cards';
 import ToggleAddCard from './toggleAddCard';
 import AddTask from './addTask';
-import { DndContext } from 'react-dnd';
+import toast from 'react-hot-toast';
+
 
 type Card = {
     id: number;
@@ -31,6 +32,38 @@ export default function CardTask() {
     const [error1, setError1] = useState("");
     const [cardId, setCardId] = useState(4);
 
+    const [editTask, setEditTask] = useState<{ cardId: number; index: number } | null>(null);
+
+    const [editedValue, setEditedValue] = useState('');
+
+
+
+
+
+    const handleEditTask = () => {
+        if (!editedValue.trim() || editTask === null) {
+            toast.dismiss()
+            toast.error("Please enter something...", {
+                duration: 2000
+            })
+            return;
+        }
+
+        const { cardId, index } = editTask;
+        const updatedTasks = { ...tasks }
+        updatedTasks[cardId][index] = editedValue
+
+        setTasks(updatedTasks);
+        setEditTask(null);
+        setEditedValue('');
+        toast.dismiss();
+        toast.success("Task edited successfully", {
+            duration: 2000
+        });
+
+    }
+
+
 
     const errorRemoverFunc = () => {
         setTimeout(() => {
@@ -54,7 +87,7 @@ export default function CardTask() {
         setCardName('');
         setCardId(cardId + 1);
         setError(null);
-        setToggle(false)
+        setToggle(false);
     };
 
     const handleAddTask = () => {
@@ -106,6 +139,7 @@ export default function CardTask() {
 
     }
 
+
     const toggleFunction = () => {
         if (toggle === true) {
             setToggle(false)
@@ -114,26 +148,31 @@ export default function CardTask() {
         }
     }
 
-    const handleDragEnd = (event: any) => {
-        const { active, over } = event;
-        if (!over) return;
+    // const handleDragEnd = (event: any) => {
+    //     const { active, over } = event;
+    //     if (!over) return;
 
-        const fromId = parseInt(active.data?.current?.parentId);
-        const toId = parseInt(over.id);
+    //     const fromId = parseInt(active.data?.current?.parentId);
+    //     const toId = parseInt(over.id);
 
-        if (fromId === toId) return;
+    //     if (fromId === toId) return;
 
-        const task = active.id;
-        setTasks((prev) => {
-            const newTasks = { ...prev };
-            newTasks[fromId] = newTasks[fromId].filter((t) => t !== task);
-            newTasks[toId] = [...(newTasks[toId] || []), task];
-            return newTasks;
-        });
-    };
+    //     const task = active.id;
+    //     setTasks((prev) => {
+    //         const newTasks = { ...prev };
+    //         newTasks[fromId] = newTasks[fromId].filter((t) => t !== task);
+    //         newTasks[toId] = [...(newTasks[toId] || []), task];
+    //         return newTasks;
+    //     });
+    // };
 
     return (
+
+
+
         <div className="bg-gradient-to-r from-[#795fc5] to-[#e574bb] min-h-96 pt-10 h-screen w-full">
+            {/* <DndContext onDragEnd={handleDragEnd}> */}
+
             <AddTask
                 taskValue={taskValue}
                 setTaskValue={setTaskValue}
@@ -143,8 +182,8 @@ export default function CardTask() {
                 handleAddTask={handleAddTask}
                 error={error}
             />
-
-            {/* <DndContext onDragEnd={handleDragEnd}></DndContext> */}
+            {/* </DndContext> */}
+            {/* <DndContext ></DndContext> */}
 
             <div className={`mt-7 mx-14`}>
 
@@ -153,13 +192,19 @@ export default function CardTask() {
                 [&::-webkit-scrollbar-thumb]:bg-gray-300
                 dark:[&::-webkit-scrollbar-track]:bg-neutral-700
                 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500`}>
-
+                    {/* <Droppable id={cards.id} children={undefined}> */}
                     <CardList
                         cards={cards}
                         tasks={tasks}
                         handleDeleteCard={handleDeleteCard}
                         handleDeleteTask={handleDeleteTask}
+                        editTask={editTask}
+                        setEditTask={setEditTask}
+                        editedValue={editedValue}
+                        setEditedValue={setEditedValue}
+                        handleEditTask={handleEditTask}
                     />
+                    {/* </Droppable> */}
 
                     <div className='text-white h-fit w-72 min-w-72'>
                         {
@@ -176,12 +221,13 @@ export default function CardTask() {
                                 :
                                 <button
                                     onClick={() => { toggleFunction() }}
-                                    className='w-full mb-64 min-w-72 cursor-pointer flex items-center bg-[#bb8cd0] p-4 rounded-xl gap-1 text-sm font-bold hover:bg-[#a170b8]'><IoMdAdd className='text-xl' />
+                                    className='w-full mb-64 min-w-72 cursor-pointer flex items-center bg-[#bb8cd0] p-4 rounded-xl gap-1 text-sm font-bold hover:bg-[#a170b8]'>
+                                    <IoMdAdd className='text-xl' />
                                     Add another card
                                 </button>
                         }
                     </div>
-                   
+
                 </div>
 
             </div>

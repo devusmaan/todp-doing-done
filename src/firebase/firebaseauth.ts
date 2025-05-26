@@ -1,5 +1,3 @@
-// "use client"
-
 import { Auth, createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { saveUser } from "./firebasefirestore";
@@ -70,14 +68,13 @@ export function SignupForm(email: string, password: string, setError: (error: st
         });
 }
 
-// const router = useRouter();
 
 
 export function loginForm(email: string, password: string, setError: (error: string) => void) {
-
+    
     signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
+    .then((userCredential) => {
+           
             const user = userCredential.user;
             toast.dismiss()
             toast.success("login successfully", {
@@ -112,7 +109,7 @@ export function emailVerification() {
     const auth = getAuth(app);
     sendEmailVerification(auth.currentUser as User)
         .then((success) => {
-
+            
             toast.dismiss()
             toast.success("Email verifcation send successfully", {
                 duration: 1000
@@ -133,7 +130,6 @@ export function signOutUser(auth: Auth) {
             duration: 600
         })
 
-
         console.log("Logout successfully");
         ("");
     }).catch((error) => {
@@ -142,6 +138,6 @@ export function signOutUser(auth: Auth) {
     });
 }
 
-function dispatch(arg0: { type: string; }) {
-    throw new Error("Function not implemented.");
-}
+// function dispatch(arg0: { type: string; }) {
+//     throw new Error("Function not implemented.");
+// }
