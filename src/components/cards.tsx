@@ -1,204 +1,233 @@
-"use client"
+"use client";
 
-import { RxCross2 } from 'react-icons/rx';
-import { MdKeyboardArrowRight, MdDelete, MdEdit } from 'react-icons/md';
-import toast, { Toaster } from 'react-hot-toast';
-// import { Draggable } from '@/dnd-kit/Draggable';
+import { RxCross2 } from "react-icons/rx";
+import { MdDelete, MdEdit } from "react-icons/md";
+import toast from "react-hot-toast";
+import { Draggable, Droppable } from "@/dnd-kit/DraggableDroppable";
+import { motion } from "framer-motion";
+import Swal from "sweetalert2";
 
 
-// import Draggable from 'react-draggable';
 
 type Card = {
-    id: number,
-    name: string
-}
+    id: number;
+    name: string;
+};
 
-
-
-type CardlistProps = {
+type CardListProps = {
     cards: Card[];
-    tasks: Record<string, string[]>;
+    tasks: Record<number, string[]>;
     handleDeleteCard: (cardId: number) => void;
     handleDeleteTask: (cardId: number, taskIndex: number) => void;
     editTask: { cardId: number; index: number } | null;
     setEditTask: (val: { cardId: number; index: number } | null) => void;
     editedValue: string;
-    setEditedValue: (val: string) => void
-    handleEditTask: () => void
-}
+    setEditedValue: (val: string) => void;
+    handleEditTask: () => void;
+};
 
-export default function CardList({ cards, tasks, handleDeleteCard, handleDeleteTask, editTask, setEditTask, editedValue, setEditedValue, handleEditTask }: CardlistProps) {
+export default function CardList({
+    cards,
+    tasks,
+    handleDeleteCard,
+    handleDeleteTask,
+    editTask,
+    setEditTask,
+    editedValue,
+    setEditedValue,
+    handleEditTask,
+}: CardListProps) {
 
 
-
-    const deleteCard = () => {
-
-        toast.error("Card removed successfully", {
-            duration: 2000
-        })
-    }
-
-
-
-    const deleteTask = () => {
-
-        toast.error("Task removed successfully", {
-            duration: 2000
-        })
-
+    const deleteCard = (id: number) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This action will remove the card permanently!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handleDeleteCard(id);
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'Card removed successfully.',
+                    icon: 'success',
+                    timer: 1200,
+                    showConfirmButton: false,
+                });
+            }
+        });
     };
 
 
+    // const deleteTask = (cardId: number, index: number) => {
+    //     toast.error("Task removed successfully", { duration: 2000 });
+    //     handleDeleteTask(cardId, index);
+    // };
 
-    // function handleDragEnd(event: { over: any; }) {
-    //     const { over } = event;
-
-    //     // If the item is dropped over a container, set it as the parent
-    //     // otherwise reset the parent to `null`
-    //     setParent(over ? over.id : null);
-    // }
-
+    // Prevent drag from interfering with clicks on buttons inside draggable
+    // const stopPropagation = (e: React.MouseEvent) => {
+    //     e.stopPropagation();
+    // };
 
     return (
-        <div className='flex flex-nowrap gap-4 box-border'>
+        <>
             {cards.map((card) => (
+                <Droppable key={card.id} id={card.id.toString()}>
+                    <div
 
-                <div
-                    className="bg-[#f1f2f4] rounded-xl h-fit max-h-96 overflow-y-auto w-72 min-w-72 mb-24 max-w-full"
-                    key={card.id}>
-                    {/* <DndContext onDragEnd={handleDragEnd}> */}
-                    {/* {parent === null ? draggableMarkup : null} */}
-                    <div className='flex justify-between mx-6 my-3'>
-                        <h2 className='text-center font-bold text-sm text-[#203354] whitespace-normal break-all'>
-                            {card.name}
-                        </h2>
-                        <button
-                            onClick={() => {
-                                handleDeleteCard(card.id)
-                                deleteCard()
-                            }
-                            }
-                            className='ease-out text-lg text-[#203354] cursor-pointer duration-500 rounded-sm transition hover:bg-[#ccced1] py-1 px-1'>
-                            <RxCross2 />
-                        </button>
-                    </div>
+                        className="bg-[#f1f2f4] rounded-xl h-fit max-h-96 w-72 min-w-72 mb-24 max-w-full p-4">
+                        <div className="flex justify-between items-center">
+                            <h2 className="font-semibold text-lg text-gray-800">{card.name}</h2>
+                            <button
+                                className="text-gray-600 hover:bg-[#bababa] p-1.5 rounded text-xl"
+                                onClick={() => deleteCard(card.id)}
+                            >
+                                <RxCross2 />
+                            </button>
+                        </div>
+
+                        {tasks[card.id]?.map((task, index) => {
 
 
-                    <ul>
-                        {tasks[card.id] && tasks[card.id].map((task, index) => (
+                            const isEditing =
+                                editTask?.cardId === card.id && editTask.index === index;
 
-                            <li className='flex items-center justify-between h-fit mb-2 mx-2 bg-white rounded-xl' key={index}>
+                            return (
 
-                                {/* <div className='flex p-2 items-center justify-between gap-2 whitespace-normal break-all'>
-                                    <div>
-                                        <MdKeyboardArrowRight className='text-xl' />
-                                    </div>
-                                    {task}
-                                </div> */}
-                                {editTask?.cardId === card.id && editTask.index === index ? (
-                                    <div
-                                        className="flex items-center gap-2 p-2 w-full animate-slide-in mr-3"
-                                    >
-                                        <input
-                                            value={editedValue}
-                                            onChange={(e) => setEditedValue(e.target.value)}
-                                            className='w-10/12 text-sm border border-gray-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-[#bb8cd0]'
-                                            autoFocus
-                                        />
-                                        <button
-                                            className='cursor-pointer duration-300 transition hover:bg-[#e2e2e2] p-1 rounded text-xl text-gray-600'
-                                            onClick={() => setEditTask(null)}
+                                <div key={index} className="bg-white rounded-lg mt-2 p-3 mb-2 shadow hover:shadow-md transition flex justify-between items-start">
+                                    {isEditing ? (
+                                        <motion.div
+                                            key="editing-task"
+                                            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            transition={{ duration: 0.3, ease: "easeOut" }}
                                         >
-                                            <RxCross2 />
-                                        </button>
-                                        <button
-                                            onClick={handleEditTask}
-                                            className="text-xs font-semibold text-white bg-[#203354] hover:bg-[#2b456e] px-3 py-1.5 rounded"
-                                        >
-                                            Save
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className='flex p-2 items-center justify-between gap-2 whitespace-normal break-all'>
-                                        <div>
-                                            <MdKeyboardArrowRight className='text-xl' />
-                                        </div>
-                                        {task}
-                                    </div>
-                                )}
+                                            <div className="flex w-full gap-1.5">
+                                                <input
+                                                    type="text"
+                                                    value={editedValue}
+                                                    onChange={(e) => setEditedValue(e.target.value)}
+                                                    className="p-2 border border-gray-300 rounded text-sm w-10/12"
+                                                    autoFocus
+                                                />
+                                                <button
+                                                    onClick={() => setEditTask(null)}
+                                                    className="text-gray-600 hover:bg-[#bababa] px-2 my-1 text-sm rounded"
+                                                >
+                                                    <RxCross2 />
+                                                </button>
+                                                <button
+                                                    onClick={handleEditTask}
+                                                    className="bg-[#bb8cd0] text-white text-sm px-2 my-1 rounded hover:bg-[#a67bba] w-fit"
+                                                >
+                                                    Save
+                                                </button>
 
-                                <div className='flex items-center justify-between gap-2 mr-2'>
+                                            </div>
+                                        </motion.div>
+                                    ) :
 
+                                        (
+                                            <motion.div
+                                                key="add-btn"
+                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                transition={{ duration: 0.3, ease: "easeOut" }}
+                                                whileHover={{ scale: 1.03 }}
+                                                whileTap={{ scale: 0.97 }}
+                                            >
 
-                                    {/* <button
-                                        onClick={() => {
-                                            handleEditTask()
-                                        }}
-                                        className='p-1.5 cursor-pointer duration-500 rounded-sm transition hover:bg-[#ccced1]'>
-                                        <MdEdit className='text-xl' />
-                                    </button> */}
+                                                <div className="flex justify-between items-center w-full z-50">
+                                                    <Draggable key={task} id={task} parentId={card.id.toString()} isDragDisabled={isEditing}>
 
-                                    {/* <button
-                                        onClick={() => {
-                                            setEditTask({ cardId: card.id, index });
-                                            setEditedValue(task);
-                                        }}
-                                        className='p-1.5 cursor-pointer duration-500 rounded-sm transition hover:bg-[#ccced1]'>
-                                        <MdEdit className='text-xl' />
-                                    </button>
+                                                        <div className="flex items-center justify-between gap-2 whitespace-normal break-all">
+                                                            <p className="text-sm text-gray-800 w-36 h-full
+                                                    bg-white rounded-lg pl-2 transition flex justify-between items-start">{task}</p>
+                                                        </div>
+                                                    </Draggable>
 
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            className="text-gray-600 hover:bg-[#bababa] py-1.5 px-1.5 rounded text-xl"
+                                                            onClick={(e) => {
+                                                                // stopPropagation(e);
+                                                                setEditTask({ cardId: card.id, index });
+                                                                setEditedValue(task);
 
-                                    <button className='p-1.5 cursor-pointer duration-500 rounded-sm transition hover:bg-[#ccced1]'
-                                        onClick={() => {
-                                            handleDeleteTask(card.id, index)
-                                            deleteTask()
-                                        }
+                                                            }} >
 
-                                        }>
+                                                            <MdEdit />
+                                                        </button>
 
-                                        <MdDelete className='text-xl' />
-                                    </button> */}
+                                                        <button
+                                                            onClick={(e) => {
 
-                                    {!(editTask?.cardId === card.id && editTask.index === index) && (
-                                        <div className='flex items-center justify-between gap-2 mr-2 '>
-                                            <button
-                                                onClick={() => {
-                                                    setEditTask({ cardId: card.id, index });
-                                                    setEditedValue(task);
-                                                }}
-                                                className='p-1.5 cursor-pointer duration-500 rounded-sm transition hover:bg-[#ccced1]'>
-                                                <MdEdit className='text-xl' />
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    handleDeleteTask(card.id, index);
-                                                    deleteTask();
-                                                }}
-                                                className='p-1.5 cursor-pointer duration-500 rounded-sm transition hover:bg-[#ccced1]'>
-                                                <MdDelete className='text-xl' />
-                                            </button>
-                                        </div>
-                                    )}
+                                                                // stopPropagation(e);
+                                                                toast.error("Task removed successfully", { duration: 2000 });
+                                                                handleDeleteTask(card.id, index);
+                                                                // deleteTask(card.id, index);
+                                                            }}
+                                                            className="text-gray-600 hover:bg-[#bababa] p-1.5 rounded text-xl">
+                                                            <MdDelete />
+
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </motion.div>
+                                        )
+                                    }
                                 </div>
 
-                            </li>
-                            // </Draggable>
-
-                        ))}
-                    </ul>
-                </div>
+                            );
+                        })}
+                    </div>
+                </Droppable >
             ))
             }
-
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-            />
-
-
-        </div >
+        </>
     );
-};
+}
 
 
-// handleDeleteCard , index
+//  <div className="flex justify-between items-center w-full z-50">
+//                                                 <Draggable key={task} id={task} parentId={card.id.toString()} isDragDisabled={isEditing}>
+
+//                                                     <p className="text-sm text-gray-800 w-36 h-full
+//                                                     bg-white rounded-lg pl-2 transition flex justify-between items-start">{task}</p>
+
+//                                                 </Draggable>
+
+//                                                 <div className="flex items-center gap-2">
+//                                                     <button
+//                                                         className="text-gray-600 hover:bg-[#bababa] py-1.5 px-1.5 rounded text-xl"
+//                                                         onClick={(e) => {
+//                                                             stopPropagation(e);
+//                                                             setEditTask({ cardId: card.id, index });
+//                                                             setEditedValue(task);
+//                                                             console.log("edit");
+
+//                                                         }} >
+
+//                                                         <MdEdit />
+//                                                     </button>
+
+//                                                     <button
+//                                                         onClick={(e) => {
+
+//                                                             stopPropagation(e);
+//                                                             toast.error("Task removed successfully", { duration: 2000 });
+//                                                             handleDeleteTask(card.id, index);
+//                                                             // deleteTask(card.id, index);
+//                                                         }}
+//                                                         className="text-gray-600 hover:bg-[#bababa] p-1.5 rounded text-xl">
+//                                                         <MdDelete />
+
+//                                                     </button>
+//                                                 </div>
+//                                             </div>

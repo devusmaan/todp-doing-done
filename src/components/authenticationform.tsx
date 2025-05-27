@@ -1,7 +1,9 @@
 
 
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { motion } from 'framer-motion'
+
 
 type SignupType = {
     signup?: boolean;
@@ -104,74 +106,60 @@ export default function AuthForm({ signup, func }: SignupType) {
     };
 
     return (
-        <div className="w-full sm:w-80 md:w-96 p-4 flex justify-center">
-
-
-            <div className="">
-
-
-
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full sm:w-80 md:w-96 p-4 flex justify-center"
+        >
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="min-[797x]"
+            >
                 <label className="items-center">
-                    <div className="text-xs font-extrabold ml-2 mb-1">
+                    <div className="text-xs font-extrabold ml-2 mb-1 text-[#333] tracking-wide">
                         EMAIL
                     </div>
                     <input
                         autoFocus
                         type="text"
-                        className="placeholder-[#767676] text-sm mb-4 min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#dddddd] rounded-3xl"
+                        className="placeholder-[#767676] text-sm mb-4 min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#bb8cd0] rounded-3xl transition-all duration-200 shadow-inner"
                         placeholder="Email"
                         value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                        }}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </label>
 
-                <label className=" items-center">
-                    <div className="text-xs font-extrabold ml-2 mb-1">
-                        Password
+                <label className="items-center">
+                    <div className="text-xs font-extrabold ml-2 mb-1 text-[#333] tracking-wide">
+                        PASSWORD
                     </div>
-
                     <input
-                        type="Type your password"
-                        className="placeholder-[#767676] text-sm min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#dddddd] rounded-3xl"
-                        placeholder={`Password`}
+                        type="password"
+                        className="placeholder-[#767676] text-sm min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#bb8cd0] rounded-3xl transition-all duration-200 shadow-inner"
+                        placeholder="Password"
                         value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                        }}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
-
                 </label>
 
-
-                {/* {error && <p className="text-red-500 mb-4">{error}</p>} */}
+           
 
                 <div className="flex justify-center mt-6">
-
-                    <button
-                        className="cursor-pointer text-white min-[295px]:w-72 rounded-3xl sm:w-80 py-2.5 md:bg-[#e574bb] min-[295px]:bg-gradient-to-r min-[295px]:from-[#795fc5] min-[295px]:to-[#e574bb] bg-[#bb8cd0] "
+                    <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="cursor-pointer text-white min-[295px]:w-72 sm:w-80 py-2.5 rounded-3xl 
+        bg-gradient-to-r from-[#795fc5] to-[#e574bb] hover:from-[#6b50b5] hover:to-[#d65ca6] 
+        shadow-md transition duration-300 font-semibold tracking-wide"
                         onClick={handleSubmit}
-
-                    // disabled={loading}
                     >
-
-
-
-
-                        {
-                            // loading ? "Loading..." :
-                            (signup ? "Sign Up" : "Login")}
-                    </button>
-
-
+                        {signup ? "Sign Up" : "Login"}
+                    </motion.button>
                 </div>
-            </div>
-
-
-
-
-            
-        </div >
+            </motion.div>
+        </motion.div>
     );
 }

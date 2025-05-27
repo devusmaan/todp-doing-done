@@ -33,7 +33,7 @@ export default function AddTask({ taskValue, setTaskValue, selectedCard, setSele
         if (!taskValue.trim() && !selectedCard) {
             toast.dismiss()
             toast.error("Please enter task and select a card", {
-                duration: 2000
+                duration: 1000
             });
             return;
         }
@@ -41,21 +41,21 @@ export default function AddTask({ taskValue, setTaskValue, selectedCard, setSele
         if (!taskValue.trim()) {
             toast.dismiss()
             toast.error("Please enter task", {
-                duration: 2000
+                duration: 1000
             });
             return;
         }
         if (!selectedCard || typeof selectedCard !== 'number') {
             toast.dismiss()
             toast.error("Please select a card", {
-                duration: 2000
+                duration: 1000
             });
             return;
         }
 
         // toast.remove()
-        toast.success('Task successfully added!'), {
-            duration: 2000
+        toast.success('Task added successfully'), {
+            duration: 1000
         }
     }
 
@@ -64,38 +64,47 @@ export default function AddTask({ taskValue, setTaskValue, selectedCard, setSele
 
 
     return (
-        <div className='mx-auto h-fit'>
+        <div className="w-full max-w-3xl mx-auto px-4 py-6">
+            <div className="bg-gray-100 rounded-xl shadow-md p-4 flex flex-col md:flex-row md:items-center md:space-x-4 gap-4">
 
-            <div className='flex flex-col bg-gray-100 md:flex-row mx-auto p-4 items-center rounded-lg gap-4 max-w-xl' >
-                <input
-                    className="py-2 flex-1 border border-gray-300 px-4 bg-[#bb8cd0] focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
-                    type="text"
-                    value={taskValue}
-                    onChange={(e) => setTaskValue(e.target.value)}
-                    placeholder="Enter task"
-                />
-                <select
-                    className="flex-1 w-40 px-4 py-2 border border-[#bb8cd0] rounded-lg focus:outline:none focus:ring-2 focus:ring-[#bb8cd0] "
-                    value={selectedCard} onChange={(e) => setSelectedCard(Number(e.target.value))}>
-                    <option className=' w-35' value="">Select Card</option>
-                    {cards.map((card) => (
-                        <option key={card.id} value={card.id}>{card.name}</option>
-                    ))}
+                <div className="w-full flex justify-center md:justify-start">
+                    <input
+                        className="w-full max-w-xs py-2 px-4 bg-[#bb8cd0] text-white placeholder-white rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-white"
+                        type="text"
+                        value={taskValue}
+                        onChange={(e) => setTaskValue(e.target.value)}
+                        placeholder="Enter task"
+                    />
+                </div>
 
-                </select>
+                <div className="w-full flex justify-center md:justify-start">
+                    <select
+                        className="w-full max-w-xs py-2 px-4 bg-white text-[#4b2564] border border-[#bb8cd0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#bb8cd0]"
+                        value={selectedCard}
+                        onChange={(e) => setSelectedCard(Number(e.target.value))}
+                    >
+                        <option value="">Select Card</option>
+                        {cards.map((card) => (
+                            <option key={card.id} value={card.id}>
+                                {card.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-                <button className="px-6 py-2 bg-[#bb8cd0] text-white rounded-lg hoverz:bg-blue-700 transition"
-                    onClick={handleClickFunc}>Add Task</button>
+                <div className="w-full flex justify-center md:justify-start">
+                    <button
+                        className="w-full max-w-xs py-2 px-6 bg-[#bb8cd0] text-white rounded-lg hover:bg-[#a270bd] transition duration-200"
+                        onClick={handleClickFunc}
+                    >
+                        Add Task
+                    </button>
+                </div>
 
             </div>
-            <div className='flex justify-center mb-5'>
 
-                <Toaster
-                    position="top-center"
-                    reverseOrder={false}
-                />
-                {/* //  <p className='text-red-500 text-sm font-bold text-right p-3 rounded-2xl'>{error}</p> */}
-
+            <div className="flex justify-center mt-4">
+                <Toaster position="top-center" reverseOrder={false} />
             </div>
         </div>
     )

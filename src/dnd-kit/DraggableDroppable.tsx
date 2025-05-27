@@ -1,36 +1,43 @@
+// "use client";
 
-// import React from 'react';
-// import { useDraggable } from '@dnd-kit/core';
+// import { useDraggable, useDroppable } from "@dnd-kit/core";
+// import React from "react";
 
-// export function Draggable({ id, children }:
-//     {
-//         //  parentId : string,
-//     id: string; children: React.ReactNode
-//     }
-// ) {
-//     const { attributes, listeners, setNodeRef, transform } = useDraggable({
-//         id,
-//         // data: {parentId},
-//     });
-//     const style = {
-//         transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
-//         cursor: "grab",
-//     }
+// export const Droppable = ({ id, children }: { id: string; children: React.ReactNode }) => {
+//   const { setNodeRef } = useDroppable({ id });
+//   return <div ref={setNodeRef}>{children}</div>;
+// };
 
+// export const Draggable = ({ id, parentId, children }: { id: string; parentId: string; children: React.ReactNode }) => {
+//   const { attributes, listeners, setNodeRef, transform } = useDraggable({
+//     id,
+//     data: { parentId },
+//   });
 
-//     return (
-//         <button ref={setNodeRef} style={style} {...listeners} {...attributes} className='p-2 m-2 bg-white shadow rounnded'>
-//             {children}
-//         </button>
-//     );
-// }
+//   const style = {
+//     transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
+//     cursor: "grab",
+//   };
 
-// components/dnd-kit/DraggableDroppable.tsx
+//   return (
+//     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+//       {children}
+//     </div>
+//   );
+// };
+
 
 "use client";
 
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import React from "react";
+
+type DraggableProps = {
+  id: string;
+  parentId: string;
+  isDragDisabled?: boolean;
+  children: React.ReactNode;
+};
 
 export const Droppable = ({
   id,
@@ -46,26 +53,30 @@ export const Droppable = ({
 export const Draggable = ({
   id,
   parentId,
+  isDragDisabled = false,
   children,
-}: {
-  id: string;
-  parentId: string;
-  children: React.ReactNode;
-}) => {
+}: DraggableProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
     data: { parentId },
+    disabled: isDragDisabled,
   });
 
   const style = {
+    // zIndex: isDragDisabled ? 100 : 1,
     transform: transform
-      ? `translate(${transform.x}px, ${transform.y}px)`
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
       : undefined,
-    cursor: "grab",
+    cursor: isDragDisabled ? "default" : "grab",
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...(isDragDisabled ? {} : listeners)}
+      {...attributes}
+    >
       {children}
     </div>
   );

@@ -1,49 +1,65 @@
-
+"use client"
 
 import Link from "next/link";
-
+import { motion } from 'framer-motion'
 
 
 export default function Hero() {
 
- 
+
 
     return (
+
         <div
             style={{
-                backgroundImage: `url(${'bg.avif'})`,
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
+                backgroundImage: `url('/bg.avif')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
             }}
-            className="flex justify-center items-center min-h-screen">
-            <div className="hero-content text-center">
-                <div className="max-w-md w-full mx-auto">
-                    <h3 className="text-2xl text-white font-bold min-[300px]:text-3xl sm:text-4xl md:text-4xl lg:text-4xl">My Trello Web</h3>
+            className="relative flex items-center justify-center min-h-screen px-4"
+        >
+          
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-0" />
 
-                    <p className="text-white text-sm sm:text-base md:text-lg lg:text-xl py-6">
-                        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-                        quasi. In deleniti eaque aut repudiandae et a id nisi.
-                    </p>
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="relative z-10 text-center w-full max-w-xl mx-auto p-6 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 shadow-lg"
+            >
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 drop-shadow">
+                    My Trello Web
+                </h1>
 
-                    <div className="flex justify-center gap-3">
+                <p className="text-white/90 text-sm sm:text-base md:text-lg leading-relaxed mb-6">
+                    Organize your projects visually with drag-and-drop boards.
+                    A beautiful and responsive Trello alternative for modern teams.
+                </p>
 
-                        <Link href={"/"}>
-                            <button className="px-6 py-3 flex items-center ease-out hover:bg-opacity-50 text-black bg-[#db85ff] duration-500 hover:bg-[#a86ccb] rounded-sm text-center font-bold h-10 text-base sm:text-lg md:text-xl">
-                                About us
-                            </button>
-                        </Link>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link href="/">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="bg-[#db85ff] hover:bg-[#a86ccb] text-black font-bold px-6 py-3 rounded-md transition duration-300 shadow-md"
+                        >
+                            About Us
+                        </motion.button>
+                    </Link>
 
-                        <Link href={"/signup"}>
-                            <button className="px-6 py-3 flex items-center ease-out hover:bg-opacity-50 text-black bg-[#db85ff] duration-500 hover:bg-[#a86ccb] rounded-sm text-center font-bold h-10 text-base sm:text-lg md:text-xl">
-                                Get Started
-                            </button>
-                        </Link>
-                    </div>
+                    <Link href="/signup">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="bg-white/90 hover:bg-white text-[#5a3d6b] font-bold px-6 py-3 rounded-md transition duration-300 shadow-md"
+                        >
+                            Get Started
+                        </motion.button>
+                    </Link>
                 </div>
-            </div>
-        </div >
-
+            </motion.div>
+        </div>
 
     )
 }
