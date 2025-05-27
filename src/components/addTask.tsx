@@ -16,12 +16,11 @@ type AddTaskType = {
     setSelectedCard: Dispatch<SetStateAction<"" | number>>,
     cards: Card[],
     handleAddTask: () => void,
-    error: string | null
 }
 
 
 
-export default function AddTask({ taskValue, setTaskValue, selectedCard, setSelectedCard, cards, handleAddTask, error }: AddTaskType) {
+export default function AddTask({ taskValue, setTaskValue, selectedCard, setSelectedCard, cards, handleAddTask }: AddTaskType) {
 
 
     const handleClickFunc = () => {
@@ -54,9 +53,9 @@ export default function AddTask({ taskValue, setTaskValue, selectedCard, setSele
         }
 
         // toast.remove()
-        toast.success('Task added successfully'), {
+        toast.success('Task added successfully', {
             duration: 1000
-        }
+        });
     }
 
 

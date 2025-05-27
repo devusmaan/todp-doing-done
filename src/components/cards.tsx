@@ -154,7 +154,7 @@ export default function CardList({
                                                     <div className="flex gap-2">
                                                         <button
                                                             className="text-gray-600 hover:bg-[#bababa] py-1.5 px-1.5 rounded text-xl"
-                                                            onClick={(e) => {
+                                                            onClick={() => {
                                                                 // stopPropagation(e);
                                                                 setEditTask({ cardId: card.id, index });
                                                                 setEditedValue(task);
@@ -165,7 +165,7 @@ export default function CardList({
                                                         </button>
 
                                                         <button
-                                                            onClick={(e) => {
+                                                            onClick={() => {
 
                                                                 // stopPropagation(e);
                                                                 toast.error("Task removed successfully", { duration: 2000 });

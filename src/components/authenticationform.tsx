@@ -13,7 +13,7 @@ type SignupType = {
 export default function AuthForm({ signup, func }: SignupType) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+
     
 
 
@@ -82,11 +82,11 @@ export default function AuthForm({ signup, func }: SignupType) {
 
             // toast.dismiss()
 
-        } catch (err) {
+        } catch {
             // console.error(err);
-            toast.error("An error occurred. Please try again."), {
+            toast.error("An error occurred. Please try again.", {
                 duration: 1000
-            };
+            })
 
         }
     };

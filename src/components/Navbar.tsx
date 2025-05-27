@@ -36,7 +36,7 @@ export default function Navbar() {
         try {
             await signOutUser(auth);
         }
-        catch (e) {
+        catch {
             toast.error("Failed to logout", {
                 duration: 500
             })
