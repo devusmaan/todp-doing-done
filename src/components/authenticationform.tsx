@@ -111,7 +111,7 @@ export default function AuthForm({ signup, func }: SignupType) {
                     <input
                         autoFocus
                         type="text"
-                        className="placeholder-[#767676] text-sm mb-4 min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#bb8cd0] rounded-3xl transition-all duration-200 shadow-inner"
+                        className="placeholder-[#767676] text-[#1e2939] text-sm mb-4 min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#bb8cd0] rounded-3xl transition-all duration-200 shadow-inner"
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -124,7 +124,7 @@ export default function AuthForm({ signup, func }: SignupType) {
                     </div>
                     <input
                         type="password"
-                        className="placeholder-[#767676] text-sm min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#bb8cd0] rounded-3xl transition-all duration-200 shadow-inner"
+                        className="placeholder-[#767676] text-[#1e2939] text-sm min-[295px]:w-72 sm:w-80 py-2.5 px-4 bg-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#bb8cd0] rounded-3xl transition-all duration-200 shadow-inner"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}

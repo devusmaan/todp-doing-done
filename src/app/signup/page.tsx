@@ -52,7 +52,7 @@ export default function SignUp() {
 
 
                     <div className="bg-white w-full min-[300px]:flex min-[577px]:hidden md:w-1/2 flex-nowrap justify-center items-center text-center">
-                        <p className="">Already have an account?</p>
+                        <p className="text-[#1e2939]">Already have an account?</p>
                         <Link
                             href="/login"
                             className="text-pink-600 font-semibold px-3 my-3 decoration-2 hover:underline"

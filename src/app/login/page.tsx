@@ -49,7 +49,7 @@ export default function Login() {
 
 
                     <div className="w-full min-[100px]:flex min-[577px]:hidden md:w-1/2 flex-nowrap justify-center items-center text-center">
-                        <p className="">Dont have an account?</p>
+                        <p className="text-[#1e2939]">Dont have an account?</p>
                         <Link
                             href="/signup"
                             className="text-pink-600 font-semibold px-3 py-2 decoration-2 hover:underline"
