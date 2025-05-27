@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 export const auth = getAuth(app);
 
-export function SignupForm(email: string, password: string, setError: (error: string) => void) {
+export function SignupForm(email: string, password: string) {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed up 
@@ -70,7 +70,7 @@ export function SignupForm(email: string, password: string, setError: (error: st
 
 
 
-export function loginForm(email: string, password: string, setError: (error: string) => void) {
+export function loginForm(email: string, password: string) {
     
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
@@ -91,7 +91,7 @@ export function loginForm(email: string, password: string, setError: (error: str
             }
 
         })
-        .catch((error) => {
+        .catch(() => {
             // const errorCode = error.code;
             // const errorMessage = error.message;
             // console.error(errorMessage, 'already login your account.');
@@ -108,7 +108,7 @@ export function emailVerification() {
 
     const auth = getAuth(app);
     sendEmailVerification(auth.currentUser as User)
-        .then((success) => {
+        .then(() => {
             
             toast.dismiss()
             toast.success("Email verifcation send successfully", {
@@ -131,8 +131,7 @@ export function signOutUser(auth: Auth) {
         })
 
         console.log("Logout successfully");
-        ("");
-    }).catch((error) => {
+    }).catch(() => {
         console.log("An error happened");
 
     });

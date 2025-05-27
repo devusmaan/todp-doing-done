@@ -1,6 +1,6 @@
 "use client";
 
-import { getAuth, onAuthStateChanged, sendSignInLinkToEmail } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "@/firebase/firebaseconfig";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";

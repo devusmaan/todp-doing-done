@@ -20,13 +20,13 @@ type ToggleAddCardType = {
 
 export default function ToggleAddCard({ cardName, setCardName, handleAddCard, toggleFunction, error1 }: ToggleAddCardType) {
 
-    let toastId: string | null = null;
+    // let toastId: string | null = null;
 
     const showErrorOrSuccessCard = () => {
         if (!cardName.trim()) {
             // if (!toastId) {
             toast.dismiss()
-            toastId = toast.error("Please enter something...", {
+            toast.error("Please enter something...", {
                 duration: 2000,
                 // onClose: () =>  
             });

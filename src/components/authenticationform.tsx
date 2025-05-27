@@ -7,14 +7,14 @@ import { motion } from 'framer-motion'
 
 type SignupType = {
     signup?: boolean;
-    func: (email: string, password: string, setError: (error: string) => void) => void;
+    func: (email: string, password: string) => void;
 };
 
 export default function AuthForm({ signup, func }: SignupType) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    
 
 
 
@@ -37,15 +37,9 @@ export default function AuthForm({ signup, func }: SignupType) {
 
     // }
 
-    const notifyError = () => {
-        toast.dismiss()
-        toast.error(error, {
-            duration: 2000
-        })
-    }
 
     const handleSubmit = async () => {
-        setError("");
+        toast.dismiss()
         // setLoading(true);
 
 
@@ -76,13 +70,9 @@ export default function AuthForm({ signup, func }: SignupType) {
         }
 
         try {
-            await func(email, password, setError);
+            await func(email, password);
             // notifySuccess()
 
-            if (error.trim()) {
-                notifyError()
-                return;
-            }
 
             // {
             //     signup ? toast.success("Sign up successfully") :  toast.success("Sign In successfully")
@@ -93,15 +83,11 @@ export default function AuthForm({ signup, func }: SignupType) {
             // toast.dismiss()
 
         } catch (err) {
-            console.error(err);
-            setError("An error occurred. Please try again.");
+            // console.error(err);
+            toast.error("An error occurred. Please try again."), {
+                duration: 1000
+            };
 
-
-            setTimeout(() => {
-                setError("");
-            }, 3000);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -145,7 +131,7 @@ export default function AuthForm({ signup, func }: SignupType) {
                     />
                 </label>
 
-           
+
 
                 <div className="flex justify-center mt-6">
                     <motion.button
