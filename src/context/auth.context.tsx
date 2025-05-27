@@ -59,7 +59,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
             }
         });
 
-    }, [])
+    }, [router])
 
 
 

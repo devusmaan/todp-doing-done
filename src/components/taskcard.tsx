@@ -29,8 +29,8 @@ export default function CardTask() {
         2: [],
         3: [],
     });
-    const [error, setError] = useState<string | null>(null);
-    const [error1, setError1] = useState("");
+   
+    // const [error1, setError1] = useState("");
     const [cardId, setCardId] = useState(4);
     const [editTask, setEditTask] = useState<{ cardId: number; index: number } | null>(null);
     const [editedValue, setEditedValue] = useState('');
@@ -39,7 +39,7 @@ export default function CardTask() {
         if (!editedValue.trim() || editTask === null) {
             toast.dismiss();
             toast.error("Please enter something...", {
-                duration: 2000,
+                duration: 1000,
             });
             return;
         }
@@ -53,7 +53,7 @@ export default function CardTask() {
         setEditedValue('');
         toast.dismiss();
         toast.success("Task edited successfully", {
-            duration: 2000,
+            duration: 1000,
         });
     };
 
@@ -80,19 +80,19 @@ export default function CardTask() {
 
     // }
 
-    const errorRemoverFunc = () => {
-        setTimeout(() => {
-            setError("");
-        }, 3000);
-        return;
-    };
+    // const errorRemoverFunc = () => {
+    //     setTimeout(() => {
+    //         setError("");
+    //     }, 3000);
+    //     return;
+    // };
 
     const handleAddCard = () => {
         if (!cardName.trim()) {
-            setError1('Please enter...');
-            setTimeout(() => {
-                setError1("");
-            }, 2000);
+            toast.error('Please enter...',{
+                duration: 1000
+            });
+           
             return;
         }
 
@@ -101,25 +101,40 @@ export default function CardTask() {
         setTasks({ ...tasks, [cardId]: [] });
         setCardName('');
         setCardId(cardId + 1);
-        setError(null);
+      
         setToggle(false);
     };
 
     const handleAddTask = () => {
         if (!taskValue.trim() && !selectedCard) {
-            setError('Please enter task and select a card');
-            errorRemoverFunc();
+
+            toast.dismiss()
+            toast.error("Please enter task and select a card", {
+                duration: 1000
+            });
+
+            // errorRemoverFunc();
             return;
         }
 
         if (!taskValue.trim()) {
-            setError('Please enter a task');
-            errorRemoverFunc();
+            toast.dismiss()
+            toast.error("Please enter a task", {
+                duration: 1000
+            });
+
+            // errorRemoverFunc();
             return;
         }
         if (!selectedCard || typeof selectedCard !== 'number') {
-            setError('Please select a card');
-            errorRemoverFunc();
+
+            toast.dismiss()
+            toast.error("Please select a card", {
+                duration: 1000
+            });
+
+            // setErrorPlease select a card');
+            // errorRemoverFunc();
             return;
         }
 
@@ -132,7 +147,7 @@ export default function CardTask() {
         setTasks(updatedTasks);
         setTaskValue('');
         setSelectedCard("");
-        setError(null);
+
     };
 
     const handleDeleteTask = (cardId: number, taskIndex: number) => {
@@ -190,7 +205,6 @@ export default function CardTask() {
                     setSelectedCard={setSelectedCard}
                     cards={cards}
                     handleAddTask={handleAddTask}
-                    error={error}
                 />
 
                 <div className="mt-7 px-4 md:px-14">
@@ -226,7 +240,7 @@ export default function CardTask() {
                                         setCardName={setCardName}
                                         handleAddCard={handleAddCard}
                                         toggleFunction={toggleFunction}
-                                        error1={error1}
+                            
                                     />
                                 </motion.div>
                             ) : (

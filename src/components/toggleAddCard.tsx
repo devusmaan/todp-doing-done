@@ -10,7 +10,6 @@ type ToggleAddCardType = {
     setCardName: Dispatch<SetStateAction<string>>,
     handleAddCard: () => void,
     toggleFunction: () => void,
-    error1: string
 }
 
 
@@ -18,7 +17,7 @@ type ToggleAddCardType = {
 
 
 
-export default function ToggleAddCard({ cardName, setCardName, handleAddCard, toggleFunction, error1 }: ToggleAddCardType) {
+export default function ToggleAddCard({ cardName, setCardName, handleAddCard, toggleFunction }: ToggleAddCardType) {
 
     // let toastId: string | null = null;
 
@@ -80,13 +79,12 @@ export default function ToggleAddCard({ cardName, setCardName, handleAddCard, to
                             className='p-2 cursor-pointer mt-2 text-[#172b4d] text-xl duration-500 rounded-sm transition hover:bg-[#ccced1]'>
                             <RxCross2 />
                         </button>
-                        {error1 &&
-                            <div>
-                                <Toaster
-                                    position="top-center"
-                                    reverseOrder={false}
-                                />
-                            </div>}
+
+                        <Toaster
+                            position="top-center"
+                            reverseOrder={false}
+                        />
+
                     </div>
 
                 </div>
