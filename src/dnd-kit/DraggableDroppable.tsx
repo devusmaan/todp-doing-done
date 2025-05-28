@@ -42,13 +42,22 @@ type DraggableProps = {
 export const Droppable = ({
   id,
   children,
+  data,
 }: {
   id: string;
   children: React.ReactNode;
+  data?: Record<string, any>; 
 }) => {
-  const { setNodeRef } = useDroppable({ id });
-  return <div ref={setNodeRef}>{children}</div>;
+  const { setNodeRef } = useDroppable({ id, data });
+  return <div ref={setNodeRef}>
+    
+    {children}
+    
+    </div>;
 };
+
+
+
 
 export const Draggable = ({
   id,
