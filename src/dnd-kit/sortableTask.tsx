@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -7,16 +7,23 @@ import React from "react";
 interface SortableTaskProps {
   id: string;
   cardId: number;
+  isEditing: boolean;
   children: React.ReactNode;
 }
 
-export const SortableTask = ({ id, cardId, children }: SortableTaskProps) => {
+export const SortableTask = ({
+  id,
+  cardId,
+  isEditing,
+  children,
+}: SortableTaskProps) => {
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
     transition,
+    isDragging,
   } = useSortable({
     id,
     data: {
@@ -25,18 +32,28 @@ export const SortableTask = ({ id, cardId, children }: SortableTaskProps) => {
     },
   });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+const style: React.CSSProperties = {
+  transform: CSS.Transform.toString(transform),
+  transition,
+  zIndex: isDragging ? 999 : "auto",
+  position: "relative",
+  touchAction: "none",
+  minHeight: isDragging ? 0 : "50px",
+  opacity: isDragging ? 0 : 1,
+  // margin: isDragging ? 0 : undefined,
+  // padding: isDragging ? 0 : undefined,
+  background: isDragging ? "transparent" : undefined,
+  // overflow: "hidden",
+  pointerEvents: isDragging ? "none" : "auto",
+};
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div ref={setNodeRef} style={style} 
+    {...(!isEditing ? attributes : {})} {...(!isEditing ? listeners : {} )}>
       {children}
     </div>
   );
 };
-
 
 // "use client"
 

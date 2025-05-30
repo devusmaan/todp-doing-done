@@ -7,7 +7,7 @@ import { CgClipboard } from "react-icons/cg";
 
 import { FiLogOut } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
-import { RxDotsHorizontal } from "react-icons/rx";
+// import { RxDotsHorizontal } from "react-icons/rx";
 
 export default function Navbar() {
 
@@ -72,15 +72,15 @@ export default function Navbar() {
 
             </div>
 
-            <div className="flex items-center gap-2 mr-2">
+            <div className="flex items-center gap-2 mr-4">
                 {/* <p className="cursor-pointer flex hover:bg-opacity-50 text-xl px-2 ease-out duration-500 gap-1 rounded-sm transition hover:bg-[rgb(237,207,255)] py-2 text-white">
                     <FaRegStar />
                 </p> */}
                 <button
                     onClick={handleSignOutUser}
-                    className="cursor-pointer flex gap-2 px-2 items-center ease-out hover:bg-opacity-50 text-black bg-[#ffffff] text-sm duration-500 hover:bg-[#edcfff] rounded-sm text-center font-bold h-8"><FiLogOut /> Logout </button>
+                    className="cursor-pointer flex gap-2 px-3 items-center ease-out hover:bg-opacity-50 text-black bg-[#ffffff] text-sm duration-500 hover:bg-[#edcfff] rounded-sm text-center font-bold h-8"><FiLogOut /> Logout </button>
                 {/* <p className="cursor-pointer hover:bg-opacity-50 ease-out text-lg text-white duration-500 rounded-sm transition hover:bg-[rgb(237,207,255)] py-2 px-2"><RxDotsHorizontal /></p> */}
-                <Link href={"/hero"} className="cursor-pointer hover:bg-opacity-50 ease-out text-lg text-white duration-500 rounded-sm transition hover:bg-[rgb(237,207,255)] py-2 px-2" ><RxDotsHorizontal /></Link>
+                {/* <Link href={"/hero"} className="cursor-pointer hover:bg-opacity-50 ease-out text-lg text-white duration-500 rounded-sm transition hover:bg-[rgb(237,207,255)] py-2 px-2" ><RxDotsHorizontal /></Link> */}
 
             </div>
 

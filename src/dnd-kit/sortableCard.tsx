@@ -1,12 +1,14 @@
+import { Card } from '@/components/cards';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 interface SortableCardProps {
   id: string;
+  card: Card | undefined
   children: React.ReactNode;
 }
 
-export function SortableCard({ id, children }: SortableCardProps) {
+export function SortableCard({ id,card,  children }: SortableCardProps) {
   const {
     attributes,
     listeners,
@@ -14,12 +16,19 @@ export function SortableCard({ id, children }: SortableCardProps) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
+  } = useSortable({ id,
+    data: {
+      type: "card",
+      card,
+    }
+   });
 
-  const style = {
+  const style: React.CSSProperties = {
     transform: CSS.Translate.toString(transform),
     transition,
-    zIndex: isDragging ? 999 : undefined,
+    position: "relative",
+    zIndex: isDragging ? 999 : "auto",
+    touchAction: "none", 
   };
 
   return (
@@ -28,9 +37,7 @@ export function SortableCard({ id, children }: SortableCardProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className={` rounded select-none ${
-        isDragging ? 'opacity-80' : ''
-      }`}
+      // className={`rounded select-none`}
     >
       {children}
     </div>
