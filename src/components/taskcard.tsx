@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { IoMdAdd } from "react-icons/io";
-import CardList from "./Card/cards";
-import ToggleAddCard from "./Card/toggleAddCard";
-import AddTask from "./Task/addTask";
-import toast from "react-hot-toast";
-import { motion } from "framer-motion";
+import { useState } from "react"
+import { IoMdAdd } from "react-icons/io"
+import CardList from "./Card/cards"
+import ToggleAddCard from "./Card/toggleAddCard"
+import AddTask from "./Task/addTask"
+import toast from "react-hot-toast"
+import { motion } from "framer-motion"
 
 type Card = {
-  id: number;
-  name: string;
-};
+  id: number
+  name: string
+}
 
 export default function CardTask() {
   const [toggle, setToggle] = useState(false);
