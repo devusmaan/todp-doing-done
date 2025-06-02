@@ -1,12 +1,8 @@
 "use client";
 
-import { ClientOnlyWrapper } from "./ClientOnlyWrapper";
 import React, { useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
-import { MdDelete, MdEdit } from "react-icons/md";
-import toast from "react-hot-toast";
 import Swal from "sweetalert2";
-import { motion } from "framer-motion";
 import {
   DndContext,
   closestCenter,
@@ -25,6 +21,8 @@ import {
 } from "@dnd-kit/sortable";
 import { SortableCard } from "@/dnd-kit/sortableCard";
 import { SortableTask } from "@/dnd-kit/sortableTask";
+import TaskShown from "../Task/taskShowsinCard";
+import EditingTask from "../Task/editingTask";
 
 export interface Card {
   id: number;
@@ -89,7 +87,11 @@ export default function CardList({
     if (type === "task") {
       setActiveTaskId(active.id.toString());
     } else {
+      // setActiveTaskId(active.id.toString());
       setActiveTaskId(null);
+      console.log(type);
+      
+    
     }
   };
 
@@ -127,6 +129,7 @@ export default function CardList({
       updateTasks(newTaskOrder);
     } else {
       const newSource = [...activeTasks];
+
       newSource.splice(oldIndex, 1);
       const newTarget = [...overTasks];
       if (newTarget.length === 0) {
@@ -170,8 +173,21 @@ export default function CardList({
     });
   };
 
+  // const handleDragOver = (event: DragOverEvent) => {
+  //   const { active, over } = event;
+  //   const type = active.data.current?.type;
+  //   // console.log(type);
+  //   // console.log(over?.id);
+  //   // if (type === "task") {
+  //   //
+  //   // } else {
+  //   //       console.log("card");
+  //   // }
+  // };
+
   return (
-    <ClientOnlyWrapper>
+    // <ClientOnlyWrapper>
+    <>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -179,6 +195,7 @@ export default function CardList({
           handleDragEnd(event);
         }}
         onDragStart={handleDragStart}
+        // onDragOver={handleDragOver}
       >
         <SortableContext
           items={cardOrder.map((id) => id.toString())}
@@ -231,99 +248,28 @@ export default function CardList({
                           >
                             <div
                               key={task}
-                              className={`bg-white rounded-lg mt-2 p-3 mb-2 shadow hover:shadow-md transition flex justify-between items-start`}
+                              className={`bg-white rounded-lg mt-2 p-3 mb-2 shadow hover:shadow-md transition flex justify-between items-start
+                                
+                          
+                                `}
                             >
                               {isEditing ? (
-                                <motion.div
-                                  initial={{
-                                    opacity: 0,
-                                    y: 30,
-                                    scale: 0.95,
-                                  }}
-                                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                                  transition={{
-                                    duration: 0.3,
-                                    ease: "easeOut",
-                                  }}
-                                >
-                                  <div className="flex w-full gap-1.5">
-                                    <input
-                                      autoFocus
-                                      data-no-dnd
-                                      draggable={false}
-                                      onMouseDown={(e) => e.stopPropagation()}
-                                      onPointerDown={(e) => e.stopPropagation()}
-                                      onDragStart={(e) => e.preventDefault()}
-                                      type="text"
-                                      value={editedValue}
-                                      onChange={(e) =>
-                                        setEditedValue(e.target.value)
-                                      }
-                                      className="p-2 border border-gray-300 rounded text-sm w-10/12"
-                                    />
-                                    <button
-                                      onMouseDown={() => setEditTask(null)}
-                                      className="text-gray-600 hover:bg-[#bababa] px-2 my-1 text-sm rounded"
-                                    >
-                                      <RxCross2 />
-                                    </button>
-                                    <button
-                                      onMouseDown={handleEditTask}
-                                      className="bg-[#bb8cd0] text-white text-sm px-2 my-1 rounded hover:bg-[#a67bba]"
-                                    >
-                                      Save
-                                    </button>
-                                  </div>
-                                </motion.div>
+                                <EditingTask
+                                  editedValue={editedValue}
+                                  setEditedValue={setEditedValue}
+                                  setEditTask={setEditTask}
+                                  handleEditTask={handleEditTask}
+                                />
                               ) : (
-                                <motion.div
-                                  initial={{
-                                    opacity: 0,
-                                    y: 10,
-                                    scale: 0.95,
-                                  }}
-                                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                                  transition={{
-                                    duration: 0.3,
-                                    ease: "easeOut",
-                                  }}
-                                  whileHover={{ scale: 1.03 }}
-                                  whileTap={{ scale: 0.97 }}
-                                >
-                                  <div
-                                    className={`flex justify-between items-center w-full group ${
-                                      activeTaskId === task
-                                        ? "opacity-0"
-                                        : "opacity-100"
-                                    }`}
-                                  >
-                                    <p className="text-sm text-gray-800 w-36 break-words">
-                                      {label}
-                                    </p>
-                                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                      <button
-                                        className="text-gray-600 hover:bg-[#bababa] p-1 rounded text-xl"
-                                        onMouseDown={() =>
-                                          startEditingTask(card.id, index)
-                                        }
-                                      >
-                                        <MdEdit />
-                                      </button>
-                                      <button
-                                        onMouseDown={() => {
-                                          toast.error(
-                                            "Task removed successfully",
-                                            { duration: 2000 }
-                                          );
-                                          handleDeleteTask(card.id, index);
-                                        }}
-                                        className="text-gray-600 hover:bg-[#bababa] p-1 rounded text-xl"
-                                      >
-                                        <MdDelete />
-                                      </button>
-                                    </div>
-                                  </div>
-                                </motion.div>
+                                <TaskShown
+                                  activeTaskId={activeTaskId}
+                                  task={task}
+                                  taskName={label}
+                                  cardId={card.id}
+                                  index={index}
+                                  startEditingTask={startEditingTask}
+                                  handleDeleteTask={handleDeleteTask}
+                                />
                               )}
                             </div>
                           </SortableTask>
@@ -339,17 +285,19 @@ export default function CardList({
         {activeTaskId && (
           <DragOverlay>
             <div className="bg-white text-sm h-full rounded-lg mt-2 p-3 mb-2 shadow hover:shadow-md transition break-words">
+              {/* {car} */}
               {activeTaskId.split("__")[0]}
             </div>
+
+            {/* {activeTaskId && <TaskComponent task={activeTaskId} isOverlay />} */}
           </DragOverlay>
         )}
       </DndContext>
-    </ClientOnlyWrapper>
+      {/* </ClientOnlyWrapper>
+       */}
+    </>
   );
 }
-
-
-
 
 {
   /* <div className="flex justify-between items-center w-full">

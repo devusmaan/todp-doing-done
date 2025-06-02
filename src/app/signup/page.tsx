@@ -1,7 +1,7 @@
 "use client"
 
 
-import AuthForm from "@/components/authenticationform";
+import AuthForm from "@/components/Auth/authenticationform";
 import { SignupForm } from "@/firebase/firebaseauth";
 import Link from "next/link";
 

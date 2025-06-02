@@ -24,6 +24,7 @@ export const SortableTask = ({
     transform,
     transition,
     isDragging,
+    isOver,
   } = useSortable({
     id,
     data: {
@@ -39,7 +40,8 @@ const style: React.CSSProperties = {
   position: "relative",
   touchAction: "none",
   minHeight: isDragging ? 0 : "50px",
-  opacity: isDragging ? 0 : 1,
+  // opacity: isDragging ? 0.5 : 1,
+  // height: "fit-content",
   // margin: isDragging ? 0 : undefined,
   // padding: isDragging ? 0 : undefined,
   background: isDragging ? "transparent" : undefined,

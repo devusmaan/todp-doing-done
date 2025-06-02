@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import CardList from "./cards";
-import ToggleAddCard from "./toggleAddCard";
-import AddTask from "./addTask";
+import CardList from "./Card/cards";
+import ToggleAddCard from "./Card/toggleAddCard";
+import AddTask from "./Task/addTask";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 
@@ -154,7 +154,7 @@ export default function CardTask() {
             updateTasks={(newTaskOrder) => setTasks(newTaskOrder)}
             setCards={setCards}
           />
-          <div className="text-white h-fit w-72 min-w-72 mb-80">
+          <div className="text-white h-fit w-72 min-w-72 mb-[340px]">
             {toggle ? (
               <motion.div
                 key="toggle-card"
