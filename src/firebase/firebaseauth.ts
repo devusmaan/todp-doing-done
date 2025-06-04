@@ -3,6 +3,7 @@ import { FirebaseError } from "firebase/app";
 import { saveUser } from "./firebasefirestore";
 import { app } from '@/firebase/firebaseconfig';
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 
 
@@ -123,6 +124,7 @@ export function emailVerification() {
 
 
 
+
 export function signOutUser(auth: Auth) {
     signOut(auth).then(() => {
         toast.dismiss()
@@ -130,7 +132,8 @@ export function signOutUser(auth: Auth) {
             duration: 600
         })
 
-        console.log("Logout successfully");
+
+        // console.log("Logout successfully");
     }).catch(() => {
         console.log("An error happened");
 

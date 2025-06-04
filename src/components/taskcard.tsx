@@ -35,6 +35,8 @@ export default function CardTask() {
   } | null>(null);
   const [editedValue, setEditedValue] = useState("");
 
+  
+  
   const handleEditTask = () => {
     if (!editedValue.trim() || editTask === null) {
       toast.dismiss();
@@ -57,7 +59,7 @@ export default function CardTask() {
       duration: 1000,
     });
   };
-
+  
   const handleAddCard = () => {
     if (!cardName.trim()) {
       toast.error("Please enter...", {
@@ -65,13 +67,14 @@ export default function CardTask() {
       });
       return;
     }
-
+    
     const newCard = { id: cardId, name: cardName };
     setCards([...cards, newCard]);
     setTasks({ ...tasks, [cardId]: [] });
     setCardName("");
     setCardId(cardId + 1);
     setToggle(false);
+    // console.log(cards);
   };
 
   const handleAddTask = () => {
@@ -111,12 +114,12 @@ export default function CardTask() {
     }
   };
 
-  const handleDeleteCard = (id: number) => {
-    setCards(cards.filter((card) => card.id !== id));
-    const updatedTasks = { ...tasks };
-    delete updatedTasks[id];
-    setTasks(updatedTasks);
-  };
+  // const handleDeleteCard = (id: number) => {
+  //   setCards(cards.filter((card) => card.id !== id));
+  //   const updatedTasks = { ...tasks };
+  //   delete updatedTasks[id];
+  //   setTasks(updatedTasks);
+  // };
 
   const toggleFunction = () => {
     setToggle(!toggle);
@@ -135,7 +138,7 @@ export default function CardTask() {
 
       <div className="px-4 md:px-14 h-fit">
         <div
-          className="flex flex-nowrap w-full gap-4 overflow-x-auto scroll-smooth
+          className="flex flex-nowrap w-full gap-4 overflow-x-auto overflow-y-hidden
           [&::-webkit-scrollbar]:h-3
           [&::-webkit-scrollbar-track]:bg-white
           [&::-webkit-scrollbar-thumb]:bg-[#c5c5c5] hover:[&::-webkit-scrollbar-thumb]:bg-[#b1b1b1]
@@ -144,7 +147,7 @@ export default function CardTask() {
           <CardList
             cards={cards}
             tasks={tasks}
-            handleDeleteCard={handleDeleteCard}
+            // handleDeleteCard={handleDeleteCard}
             handleDeleteTask={handleDeleteTask}
             editTask={editTask}
             setEditTask={setEditTask}
@@ -154,21 +157,14 @@ export default function CardTask() {
             updateTasks={(newTaskOrder) => setTasks(newTaskOrder)}
             setCards={setCards}
           />
-          <div className="text-white h-fit w-72 min-w-72 mb-[340px]">
+          <div className="text-white h-fit w-72 min-w-72 mb-[320px]">
             {toggle ? (
-              <motion.div
-                key="toggle-card"
-                initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              >
                 <ToggleAddCard
                   cardName={cardName}
                   setCardName={setCardName}
                   handleAddCard={handleAddCard}
                   toggleFunction={toggleFunction}
                 />
-              </motion.div>
             ) : (
               <motion.button
                 key="add-btn"

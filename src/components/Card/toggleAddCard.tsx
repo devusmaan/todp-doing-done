@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Dispatch, SetStateAction } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
@@ -37,39 +38,46 @@ export default function ToggleAddCard({
 
   return (
     <>
-      <div className="h-fit bg-[#f1f2f4] rounded-xl w-72 min-w-72">
-        <div className="p-2">
-          <input
-            className="py-1 px-3 bg-white text-sm w-full font-bold text-[#e575bb] rounded-sm border-2 border-[#0c66e4]"
-            type="text"
-            value={cardName}
-            autoFocus
-            onChange={(e) => setCardName(e.target.value)}
-            placeholder="Enter list name..."
-          />
-          <div className="flex items-center gap-1">
-            <button
-              className="p-2 cursor-pointer font-bold px-3 mt-2 text-sm bg-[#0c66e4] text-white rounded-sm"
-              onClick={() => {
-                handleAddCard();
-                showErrorOrSuccessCard();
-              }}
-            >
-              Add list
-            </button>
-            <button
-              onClick={() => {
-                toggleFunction();
-              }}
-              className="p-2 cursor-pointer mt-2 text-[#172b4d] text-xl duration-500 rounded-sm transition hover:bg-[#ccced1]"
-            >
-              <RxCross2 />
-            </button>
+      <motion.div
+        key="toggle-card"
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
+        <div className="h-fit bg-[#f1f2f4] rounded-xl w-72 min-w-72">
+          <div className="p-2">
+            <input
+              className="py-1 px-3 bg-white text-sm w-full font-bold text-[#e575bb] rounded-sm border-2 border-[#0c66e4]"
+              type="text"
+              value={cardName}
+              autoFocus
+              onChange={(e) => setCardName(e.target.value)}
+              placeholder="Enter list name..."
+            />
+            <div className="flex items-center gap-1">
+              <button
+                className="p-2 cursor-pointer font-bold px-3 mt-2 text-sm bg-[#0c66e4] text-white rounded-sm"
+                onClick={() => {
+                  handleAddCard();
+                  showErrorOrSuccessCard();
+                }}
+              >
+                Add list
+              </button>
+              <button
+                onClick={() => {
+                  toggleFunction();
+                }}
+                className="p-2 cursor-pointer mt-2 text-[#172b4d] text-xl duration-500 rounded-sm transition hover:bg-[#ccced1]"
+              >
+                <RxCross2 />
+              </button>
 
-            <Toaster position="top-center" reverseOrder={false} />
+              <Toaster position="top-center" reverseOrder={false} />
+            </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }

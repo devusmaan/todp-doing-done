@@ -9,7 +9,7 @@ type TaskShownProps = {
   cardId: number;
   index: number;
   startEditingTask: (cardId: number, index: number) => void;
-  handleDeleteTask: (cardId: number, index: number) => void;
+  deleteTask: (cardId: number, index: number) => void;
 };
 
 export default function TaskShown({
@@ -19,9 +19,10 @@ export default function TaskShown({
   cardId,
   index,
   startEditingTask,
-  handleDeleteTask,
+  deleteTask,
 }: TaskShownProps) {
   return (
+
     <motion.div
       initial={{
         opacity: 0,
@@ -51,8 +52,8 @@ export default function TaskShown({
           </button>
           <button
             onMouseDown={() => {
-              toast.error("Task removed successfully", { duration: 2000 });
-              handleDeleteTask(cardId, index);
+              // toast.error("Task removed successfully", { duration: 2000 });
+              deleteTask(cardId, index);
             }}
             className="text-gray-600 hover:bg-[#bababa] p-1 rounded text-xl"
           >
@@ -61,7 +62,9 @@ export default function TaskShown({
         </div>
       </div>
     </motion.div>
-  );
+
+    
+  ); 
 }
 
 // <motion.div
