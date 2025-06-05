@@ -304,7 +304,7 @@ export default function CardList({
                         strategy={verticalListSortingStrategy}
                       >
                         {dropIndicatorIndex === 0 && (
-                          <div className="h-2 bg-[#bb8cd0] rounded-full my-4 mb-2 opacity-75"></div>
+                          <div className="h-2 bg-[#bb8cd0] rounded-full my-4 opacity-75"></div>
                         )}
                         {cardTasks.map((task, index) => {
                           const [label] = task.split("__");
@@ -343,20 +343,20 @@ export default function CardList({
 
                               {dropIndicatorIndex !== 0 &&
                                 dropIndicatorIndex === index + 1 && (
-                                  <div className="h-2 bg-[#bb8cd0] rounded-full mb-2 opacity-75"></div>
+                                  <div className="h-2 bg-[#bb8cd0] rounded-full my-4 opacity-75"></div>
                                 )}
                             </div>
                           );
                         })}
 
-                        {dropIndicatorIndex !== 0 &&
+                        {/* {dropIndicatorIndex !== 0 &&
                           ((cardTasks.length === 0 &&
                             overCardId === card.id &&
                             activeTaskId) ||
                             (dropIndicatorIndex === cardTasks.length &&
                               cardTasks.length > 0)) && (
                             <div className="h-2 bg-[#bb8cd0] my-4 rounded-full mb-2 opacity-75"></div>
-                          )}
+                          )} */}
                       </SortableContext>
                     </div>
                   </div>
