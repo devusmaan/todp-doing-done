@@ -65,10 +65,10 @@ export default function Navbar() {
 
             <div className="flex items-center">
 
-                <Link href={"/"} className="text-white text-sm text-center py-1.5 rounded-sm transition hover:bg-[rgb(237,207,255)] px-1 font-bold mx-3">My Trello board</Link>
-                <p className="cursor-pointer flex hover:bg-opacity-50 ease-out duration-500 gap-1 rounded-sm transition hover:bg-[rgb(237,207,255)] py-2 px-1 text-white"><CgClipboard className="" />
+                <Link href={"/"} className="text-white text-center py-1.5 rounded-sm transition hover:bg-[rgb(237,207,255)] px-1 font-bold mx-3">My Trello board</Link>
+                {/* <p className="cursor-pointer flex hover:bg-opacity-50 ease-out duration-500 gap-1 rounded-sm transition hover:bg-[rgb(237,207,255)] py-2 px-1 text-white"><CgClipboard className="" />
                     <IoIosArrowDown />
-                </p>
+                </p> */}
 
             </div>
 

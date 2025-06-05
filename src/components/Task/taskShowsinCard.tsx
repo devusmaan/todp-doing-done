@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import toast from "react-hot-toast";
 import { MdDelete, MdEdit } from "react-icons/md";
 
 type TaskShownProps = {
@@ -22,7 +21,6 @@ export default function TaskShown({
   deleteTask,
 }: TaskShownProps) {
   return (
-
     <motion.div
       initial={{
         opacity: 0,
@@ -60,11 +58,11 @@ export default function TaskShown({
             <MdDelete />
           </button>
         </div>
+
+       
       </div>
     </motion.div>
-
-    
-  ); 
+  );
 }
 
 // <motion.div

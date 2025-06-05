@@ -3,7 +3,7 @@ import { FirebaseError } from "firebase/app";
 import { saveUser } from "./firebasefirestore";
 import { app } from '@/firebase/firebaseconfig';
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+
 
 
 
@@ -15,6 +15,7 @@ export function SignupForm(email: string, password: string) {
             // Signed up 
             // const user = userCredential.user;
             const { uid, email } = userCredential.user;
+            
             sendEmailVerification(auth.currentUser as User);
             // console.log(user, 'user created successfully.');
             toast.dismiss()
@@ -83,13 +84,13 @@ export function loginForm(email: string, password: string) {
             })
             // sendEmailVerification(auth.currentUser as User);
             // console.log(user);
-            if (user.emailVerified) {
+          if (user.emailVerified) {
                 // router.push("/")
                 // console.log('Email is verified. User can log in.')
-            } else {
+             } else {
                 // router.push("/emailverification")
                 // setError("Email is not verified. Please check your email.")
-            }
+             }
 
         })
         .catch(() => {
@@ -140,6 +141,3 @@ export function signOutUser(auth: Auth) {
     });
 }
 
-// function dispatch(arg0: { type: string; }) {
-//     throw new Error("Function not implemented.");
-// }

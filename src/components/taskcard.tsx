@@ -1,19 +1,28 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { IoMdAdd } from "react-icons/io"
-import CardList from "./Card/cards"
-import ToggleAddCard from "./Card/toggleAddCard"
-import AddTask from "./Task/addTask"
-import toast from "react-hot-toast"
-import { motion } from "framer-motion"
+import { useState, useEffect, useCallback } from "react";
+import { IoMdAdd } from "react-icons/io";
+import CardList from "./Card/cards";
+import ToggleAddCard from "./Card/toggleAddCard";
+import AddTask from "./Task/addTask";
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+import {
+  saveCard,
+  saveTasks,
+  saveUserData,
+  subscribeToUserData,
+} from "@/firebase/firebasefirestore";
+import { useAuth } from "@/context/use-auth";
+import Loader from "./UI/Loader";
 
 type Card = {
-  id: number
-  name: string
-}
+  id: number;
+  name: string;
+};
 
 export default function CardTask() {
+  const { user, loading } = useAuth();
   const [toggle, setToggle] = useState(false);
   const [cardName, setCardName] = useState("");
   const [cards, setCards] = useState<Card[]>([
@@ -34,10 +43,39 @@ export default function CardTask() {
     index: number;
   } | null>(null);
   const [editedValue, setEditedValue] = useState("");
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  
-  
-  const handleEditTask = () => {
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    const unsubscribe = subscribeToUserData(user.uid, (data) => {
+      if (data.cards) {
+        setCards(data.cards);
+        const maxId = Math.max(...data.cards.map((card) => card.id), 0);
+        setCardId(maxId + 1);
+        if (data.tasks) {
+          setTasks(data.tasks);
+        }
+      }
+      setIsDataLoaded(true);
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [user?.uid]);
+
+  useEffect(() => {
+    if (!user?.uid || !isDataLoaded) return;
+
+    const timeoutId = setTimeout(() => {
+      saveUserData(user.uid, cards, tasks);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [cards, tasks, user?.uid, isDataLoaded]);
+
+  const handleEditTask = useCallback(() => {
     if (!editedValue.trim() || editTask === null) {
       toast.dismiss();
       toast.error("Please enter something...", {
@@ -45,39 +83,56 @@ export default function CardTask() {
       });
       return;
     }
+
     const { cardId, index } = editTask;
     const updatedTasks = { ...tasks };
     const originalTask = updatedTasks[cardId][index];
     const [, uniqueId] = originalTask.split("__");
     const newTaskValue = `${editedValue}__${uniqueId}`;
     updatedTasks[cardId][index] = newTaskValue;
+
     setTasks(updatedTasks);
     setEditTask(null);
     setEditedValue("");
+
+    if (user?.uid) {
+      saveTasks(user.uid, updatedTasks);
+    }
+
     toast.dismiss();
     toast.success("Task edited successfully", {
       duration: 1000,
     });
-  };
-  
-  const handleAddCard = () => {
+  }, [editedValue, editTask, tasks, user?.uid]);
+
+  const handleAddCard = useCallback(() => {
     if (!cardName.trim()) {
       toast.error("Please enter...", {
         duration: 1000,
       });
       return;
     }
-    
+
     const newCard = { id: cardId, name: cardName };
-    setCards([...cards, newCard]);
-    setTasks({ ...tasks, [cardId]: [] });
+    const updatedCards = [...cards, newCard];
+    const updatedTasks = { ...tasks, [cardId]: [] };
+
+    setCards(updatedCards);
+    setTasks(updatedTasks);
     setCardName("");
     setCardId(cardId + 1);
     setToggle(false);
-    // console.log(cards);
-  };
 
-  const handleAddTask = () => {
+    if (user?.uid) {
+      saveUserData(user.uid, updatedCards, updatedTasks);
+    }
+
+    toast.success("Card added successfully", {
+      duration: 1000,
+    });
+  }, [cardName, cardId, cards, tasks, user?.uid]);
+
+  const handleAddTask = useCallback(() => {
     if (!taskValue.trim() && !selectedCard) {
       toast.dismiss();
       toast.error("Please enter task and select a card", { duration: 1000 });
@@ -101,29 +156,63 @@ export default function CardTask() {
     } else {
       updatedTasks[selectedCard] = [uniqueTask];
     }
+
     setTasks(updatedTasks);
     setTaskValue("");
     setSelectedCard("");
-  };
 
-  const handleDeleteTask = (cardId: number, taskIndex: number) => {
-    const updatedTasks = { ...tasks };
-    if (cardId in updatedTasks) {
-      updatedTasks[cardId].splice(taskIndex, 1);
-      setTasks(updatedTasks);
+    if (user?.uid) {
+      saveTasks(user.uid, updatedTasks);
     }
-  };
 
-  // const handleDeleteCard = (id: number) => {
-  //   setCards(cards.filter((card) => card.id !== id));
-  //   const updatedTasks = { ...tasks };
-  //   delete updatedTasks[id];
-  //   setTasks(updatedTasks);
-  // };
+    toast.success("Task added successfully", {
+      duration: 1000,
+    });
+  }, [taskValue, selectedCard, tasks, user?.uid]);
+
+  const handleDeleteTask = useCallback(
+    (cardId: number, taskIndex: number) => {
+      const updatedTasks = { ...tasks };
+      if (cardId in updatedTasks) {
+        updatedTasks[cardId].splice(taskIndex, 1);
+        setTasks(updatedTasks);
+
+        if (user?.uid) {
+          saveTasks(user.uid, updatedTasks);
+        }
+      }
+    },
+    [tasks, user?.uid]
+  );
+
+  const updateTasks = useCallback(
+    (newTaskOrder: Record<number, string[]>) => {
+      setTasks(newTaskOrder);
+      if (user?.uid) {
+        saveTasks(user.uid, newTaskOrder);
+      }
+    },
+    [user?.uid]
+  );
+
+  const updateCards = useCallback(
+    (newCards: Card[]) => {
+      setCards(newCards);
+
+      if (user?.uid) {
+        saveCard(user.uid, newCards);
+      }
+    },
+    [user?.uid]
+  );
 
   const toggleFunction = () => {
     setToggle(!toggle);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="bg-gradient-to-r from-[#795fc5] to-[#e574bb] md:h-[91.3vh] max-[767px]:min-h-screen pt-4 w-full">
@@ -145,26 +234,30 @@ export default function CardTask() {
           transition-all duration-300"
         >
           <CardList
+            taskValue={taskValue}
+            setTaskValue={setTaskValue}
+            selectedCard={selectedCard}
+            setSelectedCard={setSelectedCard}
+            handleAddTask={handleAddTask}
             cards={cards}
             tasks={tasks}
-            // handleDeleteCard={handleDeleteCard}
             handleDeleteTask={handleDeleteTask}
             editTask={editTask}
             setEditTask={setEditTask}
             editedValue={editedValue}
             setEditedValue={setEditedValue}
             handleEditTask={handleEditTask}
-            updateTasks={(newTaskOrder) => setTasks(newTaskOrder)}
-            setCards={setCards}
+            updateTasks={updateTasks}
+            setCards={updateCards}
           />
-          <div className="text-white h-fit w-72 min-w-72 mb-[320px]">
+          <div className="text-white h-fit w-72 min-w-72 mb-[350px]">
             {toggle ? (
-                <ToggleAddCard
-                  cardName={cardName}
-                  setCardName={setCardName}
-                  handleAddCard={handleAddCard}
-                  toggleFunction={toggleFunction}
-                />
+              <ToggleAddCard
+                cardName={cardName}
+                setCardName={setCardName}
+                handleAddCard={handleAddCard}
+                toggleFunction={toggleFunction}
+              />
             ) : (
               <motion.button
                 key="add-btn"

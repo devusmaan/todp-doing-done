@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { RxCross2 } from "react-icons/rx";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import {
   DndContext,
-  // closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
@@ -25,8 +23,7 @@ import { SortableTask } from "@/dnd-kit/sortableTask";
 import { SortableCard } from "@/dnd-kit/sortableCard";
 import TaskShown from "../Task/taskShowsinCard";
 import EditingTask from "../Task/editingTask";
-// import { Draggable } from "@/dnd-kit/dragable";
-import { listeners } from "process";
+import AddAnotherTask from "../UI/addAnotherTask";
 
 export interface Card {
   id: number;
@@ -34,9 +31,13 @@ export interface Card {
 }
 
 interface CardListProps {
+  taskValue: string;
+  setTaskValue: Dispatch<SetStateAction<string>>;
+  selectedCard: string | number;
+  setSelectedCard: Dispatch<SetStateAction<"" | number>>;
+  handleAddTask: () => void;
   cards: Card[];
   tasks: Record<number, string[]>;
-  // handleDeleteCard: (cardId: number) => void;
   handleDeleteTask: (cardId: number, taskIndex: number) => void;
   editTask: { cardId: number; index: number } | null;
   setEditTask: (val: { cardId: number; index: number } | null) => void;
@@ -48,9 +49,13 @@ interface CardListProps {
 }
 
 export default function CardList({
+  taskValue,
+  setTaskValue,
+  selectedCard,
+  setSelectedCard,
+  handleAddTask,
   cards,
   tasks,
-  // handleDeleteCard,
   handleDeleteTask,
   editTask,
   setEditTask,
@@ -63,20 +68,16 @@ export default function CardList({
   const [cardOrder, setCardOrder] = useState<number[]>(cards.map((c) => c.id));
   const [taskOrder, setTaskOrder] = useState<Record<string, string[]>>({});
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
-  /// i removed unused activeCardId
   const [, setActiveCardId] = useState<string | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
   const [overCardId, setOverCardId] = useState<number | null>(null);
   const activeTaskRef = useRef<HTMLDivElement>(null);
-
-  // i removed unused taskDimensions
   const [, setTaskDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     if (activeTaskRef.current) {
       const { offsetWidth, offsetHeight } = activeTaskRef.current;
       setTaskDimensions({ width: offsetWidth, height: offsetHeight });
-      console.log("offsetWidth: ", offsetWidth, "offsetHeight", offsetHeight);
     }
 
     setCardOrder(cards.map((c) => c.id));
@@ -99,7 +100,6 @@ export default function CardList({
       setActiveTaskId(active.id.toString());
     } else if (type === "card") {
       setActiveCardId(active.id.toString());
-      // console.log(active.id);
     }
   };
 
@@ -116,20 +116,16 @@ export default function CardList({
 
     if (activeType === "task") {
       setOverId(over.id.toString());
-      // console.log(activeType);
 
       if (overType === "task") {
         setOverCardId(over.data.current?.cardId);
-        // console.log(overType);
       } else {
         setOverCardId(Number(over.id));
-        // console.log(over.id);
       }
     }
 
     if (activeType === "card") {
       setOverId(over.id.toString());
-      // console.log(over.id);
     }
   };
 
@@ -163,11 +159,13 @@ export default function CardList({
       }
       if (newIndex !== activeCardIndex && newIndex >= 0) {
         const newCardOrder = arrayMove(cardOrder, activeCardIndex, newIndex);
+        const newCards = arrayMove(cards, activeCardIndex, newIndex);
         setCardOrder(newCardOrder);
-        setCards(arrayMove(cards, activeCardIndex, newIndex));
+        setCards(newCards);
       }
       return;
     }
+
     if (activeType === "task") {
       const activeCardId = active.data.current?.cardId;
       const overType = over.data.current?.type;
@@ -181,6 +179,7 @@ export default function CardList({
       const activeTasks = taskOrder[activeCardId] || [];
       const targetTasks = taskOrder[targetCardId] || [];
       const oldIndex = activeTasks.findIndex((t) => t === activeId);
+
       if (activeCardId === targetCardId) {
         let newIndex = targetTasks.length;
         if (overType === "task") {
@@ -222,8 +221,7 @@ export default function CardList({
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        // handleDeleteCard(id);
-        handleDeleteTask(cardId, index)
+        handleDeleteTask(cardId, index);
         Swal.fire({
           title: "Deleted!",
           text: "Task removed successfully.",
@@ -247,7 +245,6 @@ export default function CardList({
     <>
       <DndContext
         sensors={sensors}
-        // collisionDetection={closestCenter}
         collisionDetection={rectIntersection}
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
@@ -255,38 +252,26 @@ export default function CardList({
       >
         <SortableContext
           items={cardOrder.map((id) => id.toString())}
-          // items={cardOrder.map(String)}
           strategy={horizontalListSortingStrategy}
         >
           {cardOrder.map((cardId) => {
             const card = cards.find((c) => c.id === cardId);
             if (!card) return null;
-            
+
             const dropIndicatorIndex = getDropIndicatorIndex(cardId);
             const cardTasks = taskOrder[card.id] || [];
-            // console.log(card.id);
-            return (
-              // <div className="" key={cardId}>
 
-              // sortableCard children prop used here
+            return (
               <SortableCard key={cardId} id={card.id.toString()} card={card}>
                 {({ listeners }) => (
                   <div
                     {...listeners}
-                    className="bg-gray-100 rounded-xl h-fit max-h-96 w-72 min-w-72 max-w-full p-4"
+                    className="bg-gray-100 rounded-xl h-fit max-h-96 pb-3 w-72 min-w-72 max-w-full p-4"
                   >
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg text-[#000000] wrap-anywhere sticky">
                         {card.name}
                       </h2>
-                      {/* <button
-                        onMouseDown={() => {
-                          deleteCard(card.id);
-                        }}
-                        className="text-gray-600 hover:bg-[#bababa] p-1.5 rounded text-xl"
-                      >
-                        <RxCross2 />
-                      </button> */}
                     </div>
 
                     <div
@@ -334,7 +319,6 @@ export default function CardList({
                                       cardId={card.id}
                                       index={index}
                                       startEditingTask={startEditingTask}
-                                      // handleDeleteTask={handleDeleteTask}
                                       deleteTask={deleteTask}
                                     />
                                   )}
@@ -350,19 +334,24 @@ export default function CardList({
                         })}
 
                         {/* {dropIndicatorIndex !== 0 &&
-                          ((cardTasks.length === 0 &&
-                            overCardId === card.id &&
-                            activeTaskId) ||
-                            (dropIndicatorIndex === cardTasks.length &&
-                              cardTasks.length > 0)) && (
+                          ((cardTasks.length === 0 && overCardId === card.id && activeTaskId) ||
+                            (dropIndicatorIndex === cardTasks.length && cardTasks.length > 0)) && (
                             <div className="h-2 bg-[#bb8cd0] my-4 rounded-full mb-2 opacity-75"></div>
                           )} */}
                       </SortableContext>
                     </div>
+                    <AddAnotherTask
+                      cardName={card.name}
+                      taskValue={taskValue}
+                      setTaskValue={setTaskValue}
+                      selectedCard={selectedCard}
+                      setSelectedCard={setSelectedCard}
+                      cards={cards}
+                      handleAddTask={handleAddTask}
+                    />
                   </div>
                 )}
               </SortableCard>
-              //  </div>
             );
           })}
         </SortableContext>
@@ -372,8 +361,6 @@ export default function CardList({
             <div
               className="bg-white text-sm rounded-lg p-3 shadow-lg transition break-words border-2 border-[#bb8cd0]"
               style={{
-                // width: taskDimensions.width || "auto",
-                // minHeight: "50px",
                 opacity: 0.9,
               }}
             >

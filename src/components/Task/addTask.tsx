@@ -68,10 +68,10 @@ export default function AddTask({
 
     handleAddTask();
 
-    toast.dismiss();
-    toast.success("Task added successfully", {
-      duration: 1000,
-    });
+    // toast.dismiss();
+    // toast.success("Task added successfully", {
+    //   duration: 1000,
+    // });
 
     setTaskValue("");
     setSelectedCard("");
