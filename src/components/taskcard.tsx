@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { IoMdAdd } from "react-icons/io";
 import CardList from "./Card/cards";
 import ToggleAddCard from "./Card/toggleAddCard";
-import AddTask from "./Task/addTask";
+// import AddTask from "./Task/addTask";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import {
@@ -15,6 +15,7 @@ import {
 } from "@/firebase/firebasefirestore";
 import { useAuth } from "@/context/use-auth";
 import Loader from "./UI/Loader";
+import Swal from "sweetalert2";
 
 type Card = {
   id: number;
@@ -44,6 +45,14 @@ export default function CardTask() {
   } | null>(null);
   const [editedValue, setEditedValue] = useState("");
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  const showSwal = () => {
+    Swal.fire({
+      title: "Good job!",
+      text: "You added the card!",
+      icon: "success",
+    });
+  };
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -107,7 +116,19 @@ export default function CardTask() {
 
   const handleAddCard = useCallback(() => {
     if (!cardName.trim()) {
-      toast.error("Please enter...", {
+      toast.dismiss();
+      toast.error("Please enter card name", {
+        duration: 1000,
+      });
+      return;
+    }
+
+    const isDuplicate = cards.some(
+      (card) => card.name.trim().toLowerCase() === cardName.trim().toLowerCase()
+    );
+
+    if (isDuplicate) {
+      toast.error("Card name already exists", {
         duration: 1000,
       });
       return;
@@ -125,12 +146,9 @@ export default function CardTask() {
 
     if (user?.uid) {
       saveUserData(user.uid, updatedCards, updatedTasks);
+      showSwal();
     }
-
-    toast.success("Card added successfully", {
-      duration: 1000,
-    });
-  }, [cardName, cardId, cards, tasks, user?.uid]);
+  }, [cardName, cardId, cards, tasks, user, setCards, setTasks]);
 
   const handleAddTask = useCallback(() => {
     if (!taskValue.trim() && !selectedCard) {
@@ -171,14 +189,36 @@ export default function CardTask() {
   }, [taskValue, selectedCard, tasks, user?.uid]);
 
   const handleDeleteTask = useCallback(
-    (cardId: number, taskIndex: number) => {
-      const updatedTasks = { ...tasks };
-      if (cardId in updatedTasks) {
-        updatedTasks[cardId].splice(taskIndex, 1);
-        setTasks(updatedTasks);
+    async (cardId: number, taskIndex: number) => {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "This action will remove the task permanently!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      });
 
-        if (user?.uid) {
-          saveTasks(user.uid, updatedTasks);
+      if (result.isConfirmed) {
+
+        const updatedTasks = { ...tasks };
+        if (cardId in updatedTasks) {
+          updatedTasks[cardId].splice(taskIndex, 1);
+          setTasks(updatedTasks);
+
+          if (user?.uid) {
+            saveTasks(user.uid, updatedTasks);
+          }
+
+          await Swal.fire({
+            title: "Deleted!",
+            text: "Task removed successfully.",
+            icon: "success",
+            timer: 1200,
+            showConfirmButton: false,
+          });
         }
       }
     },
@@ -216,16 +256,16 @@ export default function CardTask() {
 
   return (
     <div className="bg-gradient-to-r from-[#795fc5] to-[#e574bb] md:h-[91.3vh] max-[767px]:min-h-screen pt-4 w-full">
-      <AddTask
+      {/* <AddTask
         taskValue={taskValue}
         setTaskValue={setTaskValue}
         selectedCard={selectedCard}
         setSelectedCard={setSelectedCard}
         cards={cards}
         handleAddTask={handleAddTask}
-      />
+      /> */}
 
-      <div className="px-4 md:px-14 h-fit">
+      <div className="px-4 md:px-14 h-fit mt-8">
         <div
           className="flex flex-nowrap w-full gap-4 overflow-x-auto overflow-y-hidden
           [&::-webkit-scrollbar]:h-3
@@ -250,7 +290,7 @@ export default function CardTask() {
             updateTasks={updateTasks}
             setCards={updateCards}
           />
-          <div className="text-white h-fit w-72 min-w-72 mb-[350px]">
+          <div className="text-white h-fit w-72 min-w-72 mb-[365px]">
             {toggle ? (
               <ToggleAddCard
                 cardName={cardName}

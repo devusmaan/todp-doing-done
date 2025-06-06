@@ -105,7 +105,7 @@ export default function CardList({
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
-    if (!over) {
+    if (!over || active.id === over.id) {
       setOverId(null);
       setOverCardId(null);
       return;
@@ -209,30 +209,6 @@ export default function CardList({
     }
   };
 
-  const deleteTask = (cardId: number, index: number) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This action will remove the task permanently!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleDeleteTask(cardId, index);
-        Swal.fire({
-          title: "Deleted!",
-          text: "Task removed successfully.",
-          icon: "success",
-          timer: 1200,
-          showConfirmButton: false,
-        });
-      }
-    });
-  };
-
   const getDropIndicatorIndex = (cardId: number) => {
     if (!activeTaskId || overCardId !== cardId) return -1;
     const cardTasks = taskOrder[cardId] || [];
@@ -293,6 +269,8 @@ export default function CardList({
                         )}
                         {cardTasks.map((task, index) => {
                           const [label] = task.split("__");
+                          // console.log(label);
+
                           const isEditing =
                             editTask?.cardId === card.id &&
                             editTask.index === index;
@@ -319,7 +297,7 @@ export default function CardList({
                                       cardId={card.id}
                                       index={index}
                                       startEditingTask={startEditingTask}
-                                      deleteTask={deleteTask}
+                                      handleDeleteTask={handleDeleteTask}
                                     />
                                   )}
                                 </div>
@@ -344,7 +322,7 @@ export default function CardList({
                       cardName={card.name}
                       taskValue={taskValue}
                       setTaskValue={setTaskValue}
-                      selectedCard={selectedCard}
+                      // selectedCard={selectedCard}
                       setSelectedCard={setSelectedCard}
                       cards={cards}
                       handleAddTask={handleAddTask}

@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Dispatch, SetStateAction } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
-import Swal from "sweetalert2";
 
 type ToggleAddCardType = {
   cardName: string;
@@ -17,23 +16,29 @@ export default function ToggleAddCard({
   handleAddCard,
   toggleFunction,
 }: ToggleAddCardType) {
-  const showErrorOrSuccessCard = () => {
-    if (!cardName.trim()) {
-      toast.dismiss();
-      toast.error("Please enter something...", {
-        duration: 2000,
-      });
-      return;
-    }
-    showSwal();
-  };
+  // const showErrorOrSuccessCard = () => {
+  //   if (!cardName.trim()) {
+  //     toast.dismiss();
+  //     toast.error("Please enter something...", {
+  //       duration: 2000,
+  //     });
+  //     return;
+  //   }
+  // };
 
-  const showSwal = () => {
-    Swal.fire({
-      title: "Good job!",
-      text: "You added the card!",
-      icon: "success",
-    });
+
+
+  const handleKeyDown = (event: { key: string }) => {
+    if (event.key === "Enter") {
+      if (!cardName.trim()) {
+        toast.dismiss();
+        toast.error("Please enter card", {
+          duration: 1000,
+        });
+        return;
+      }
+      handleAddCard();
+    }
   };
 
   return (
@@ -50,6 +55,7 @@ export default function ToggleAddCard({
               className="py-1 px-3 bg-white text-sm w-full font-bold text-[#e575bb] rounded-sm border-2 border-[#0c66e4]"
               type="text"
               value={cardName}
+              onKeyDown={handleKeyDown}
               autoFocus
               onChange={(e) => setCardName(e.target.value)}
               placeholder="Enter list name..."
@@ -59,7 +65,7 @@ export default function ToggleAddCard({
                 className="p-2 cursor-pointer font-bold px-3 mt-2 text-sm bg-[#0c66e4] text-white rounded-sm"
                 onClick={() => {
                   handleAddCard();
-                  showErrorOrSuccessCard();
+                  // showErrorOrSuccessCard();
                 }}
               >
                 Add list

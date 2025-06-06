@@ -4,27 +4,17 @@ import type React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Card } from "@/components/Card/cards";
-// import { useEffect, useState } from "react";
-
 interface SortableCardProps {
   id: string;
   card: Card;
-   children: (props: {
+  children: (props: {
     listeners: ReturnType<typeof useSortable>["listeners"];
     attributes: ReturnType<typeof useSortable>["attributes"];
   }) => React.ReactNode;
 }
 
-/// up is child prop types
 
 export function SortableCard({ id, card, children }: SortableCardProps) {
-  // const [mounted, setMounted] = useState(false);
-
-  // useEffect(() => {
-  //   setMounted(true);
-  // }, []);
-
-  // if (!mounted) return null;
 
   const {
     attributes,
@@ -63,13 +53,10 @@ export function SortableCard({ id, card, children }: SortableCardProps) {
       // {...attributes}
       // {...listeners} i added props to children to fix drag
     >
-
-     {children({ listeners, attributes})
-     }
+      {children({ listeners, attributes })}
     </div>
-  )
+  );
 }
-
 
 // import { Card } from "@/components/Card/cards";
 // import { useSortable } from "@dnd-kit/sortable";

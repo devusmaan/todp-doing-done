@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 
 interface EditingTaskProps {
@@ -15,35 +16,47 @@ export default function EditingTask({
   setEditTask,
   handleEditTask,
 }: EditingTaskProps) {
-  return (
-    
-      <div className="flex w-full gap-1.5">
-        <input
-          autoFocus
-          data-no-dnd
-          draggable={false}
-          onMouseDown={(e) => e.stopPropagation()}
-          onPointerDown={(e) => e.stopPropagation()}
-          onDragStart={(e) => e.preventDefault()}
-          type="text"
-          value={editedValue}
-          onChange={(e) => setEditedValue(e.target.value)}
-          className="p-2 border border-gray-300 rounded text-sm w-10/12"
-        />
-        <button
-          onMouseDown={() => setEditTask(null)}
-          className="text-gray-600 hover:bg-[#bababa] px-2 my-1 text-sm rounded"
-        >
-          <RxCross2 />
-        </button>
-        <button
-          onMouseDown={handleEditTask}
-          className="bg-[#bb8cd0] text-white text-sm px-2 my-1 rounded hover:bg-[#a67bba]"
-        >
-          Save
-        </button>
-      </div>
+  const handleKeyDown = (event: { key: string }) => {
+    if (event.key === "Enter") {
+      if (!editedValue.trim()) {
+        toast.dismiss();
+        toast.error("Please enter task", {
+          duration: 1000,
+        });
+        return;
+      }
+      handleEditTask();
+    }
+  };
 
+  return (
+    <div className="flex w-full gap-1.5">
+      <input
+        autoFocus
+        data-no-dnd
+        onKeyDown={handleKeyDown}
+        draggable={false}
+        onMouseDown={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+        onDragStart={(e) => e.preventDefault()}
+        type="text"
+        value={editedValue}
+        onChange={(e) => setEditedValue(e.target.value)}
+        className="p-2 border border-gray-300 rounded text-sm w-10/12"
+      />
+      <button
+        onMouseDown={() => setEditTask(null)}
+        className="text-gray-600 hover:bg-[#bababa] px-2 my-1 text-sm rounded"
+      >
+        <RxCross2 />
+      </button>
+      <button
+        onMouseDown={handleEditTask}
+        className="bg-[#bb8cd0] text-white text-sm px-2 my-1 rounded hover:bg-[#a67bba]"
+      >
+        Save
+      </button>
+    </div>
   );
 }
 
