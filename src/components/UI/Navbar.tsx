@@ -3,10 +3,8 @@ import { auth, signOutUser } from "@/firebase/firebaseauth";
 
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { CgClipboard } from "react-icons/cg";
-
 import { FiLogOut } from "react-icons/fi";
-import { IoIosArrowDown } from "react-icons/io";
+
 // import { RxDotsHorizontal } from "react-icons/rx";
 
 export default function Navbar() {

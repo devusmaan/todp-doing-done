@@ -1,6 +1,7 @@
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "./firebaseconfig";
 import { getDatabase, off, onValue, ref, set } from 'firebase/database';
+import { Card } from "@/components/Card/cards";
 
 
 
@@ -70,7 +71,7 @@ export async function saveUser(user: userSaveType) {
 
 const database = getDatabase(app)
 
-export const saveUserData = (userUid: string, cards: any[], tasks: Record<number, string[]>) => {
+export const saveUserData = (userUid: string, cards: Card[], tasks: Record<number, string[]>) => {
   const userRef = ref(database, `users/${userUid}`)
   set(userRef, {
     cards,
@@ -81,7 +82,7 @@ export const saveUserData = (userUid: string, cards: any[], tasks: Record<number
 
 export const subscribeToUserData = (
   userUid: string,
-  callback: (data: { cards: any[]; tasks: Record<number, string[]> }) => void,
+  callback: (data: { cards: Card[]; tasks: Record<number, string[]> }) => void,
 ) => {
   const userRef = ref(database, `users/${userUid}`)
   const unsubscribe = onValue(userRef, (snapshot) => {
@@ -102,7 +103,7 @@ export const subscribeToUserData = (
   return () => off(userRef, "value", unsubscribe)
 }
 
-export const saveCard = (userUid: string, cards: any[]) => {
+export const saveCard = (userUid: string, cards: Card[]) => {
   const cardsRef = ref(database, `users/${userUid}/cards`)
   set(cardsRef, cards)
 }
