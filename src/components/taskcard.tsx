@@ -202,7 +202,6 @@ export default function CardTask() {
       });
 
       if (result.isConfirmed) {
-
         const updatedTasks = { ...tasks };
         if (cardId in updatedTasks) {
           updatedTasks[cardId].splice(taskIndex, 1);
@@ -265,7 +264,32 @@ export default function CardTask() {
         handleAddTask={handleAddTask}
       /> */}
 
-      <div className="px-4 md:px-14 h-fit mt-8">
+      {/* {toggle ? (
+        <ToggleAddCard
+          cardName={cardName}
+          setCardName={setCardName}
+          handleAddCard={handleAddCard}
+          toggleFunction={toggleFunction}
+        />
+      ) : (
+        <div className="flex justify-center">
+          <motion.button
+            key="add-btn"
+            onClick={toggleFunction}
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="w-72 cursor-pointer flex items-center justify-center bg-[#bb8cd0] hover:bg-[#a170b8] p-5 rounded-xl gap-1 text-sm font-bold transition-all duration-300 ease-in-out transform shadow-md"
+          >
+            <IoMdAdd className="text-xl animate-pulse" />
+            Add another card
+          </motion.button>
+        </div>
+      )} */}
+
+      <div className="px-4 md:px-14 mt-8">
         <div
           className="flex flex-nowrap w-full gap-4 overflow-x-auto overflow-y-hidden
           [&::-webkit-scrollbar]:h-3
@@ -290,7 +314,9 @@ export default function CardTask() {
             updateTasks={updateTasks}
             setCards={updateCards}
           />
-          <div className="text-white h-fit w-72 min-w-72 mb-[365px]">
+
+
+          <div className="text-white h-fit mb-[365px]">
             {toggle ? (
               <ToggleAddCard
                 cardName={cardName}
@@ -307,13 +333,15 @@ export default function CardTask() {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="w-full min-w-72 cursor-pointer flex items-center justify-center bg-[#bb8cd0] hover:bg-[#a170b8] p-5 rounded-xl gap-1 text-sm font-bold transition-all duration-300 ease-in-out transform shadow-md"
+                className="w-72 cursor-pointer flex items-center justify-center bg-[#bb8cd0] hover:bg-[#a170b8] p-5 rounded-xl gap-1 text-sm font-bold transition-all duration-300 ease-in-out transform shadow-md"
               >
                 <IoMdAdd className="text-xl animate-pulse" />
                 Add another card
               </motion.button>
             )}
           </div>
+
+
         </div>
       </div>
     </div>

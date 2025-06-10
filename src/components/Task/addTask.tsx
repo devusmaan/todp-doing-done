@@ -32,6 +32,7 @@
 //   }));
 
 //   const [hydrated, setHydrated] = useState(false);
+//   const [inputVal, setInputVal] = useState("");
 
 //   useEffect(() => {
 //     setHydrated(true);
@@ -84,8 +85,8 @@
 //           <input
 //             className="w-full max-w-xs py-2 px-4 bg-[#bb8cd0] text-white placeholder-white rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-white transition-all duration-200"
 //             type="text"
-//             value={taskValue}
-//             onChange={(e) => setTaskValue(e.target.value)}
+//             value={inputVal}
+//             onChange={(e) => setInputVal(e.target.value)}
 //             placeholder="Enter task"
 //           />
 //         </div>
@@ -113,7 +114,8 @@
 //                   backgroundColor: state.isFocused ? "#f3e6f8" : "white",
 //                   color: "#4b2564",
 //                 }),
-//               }} />
+//               }}
+//             />
 //           </div>
 //         </div>
 
@@ -126,8 +128,7 @@
 //           </button>
 //         </div>
 //       </div>
-//         <Toaster position="top-center" reverseOrder={false} />
-   
+//       <Toaster position="top-center" reverseOrder={false} />
 //     </div>
 //   );
 // }

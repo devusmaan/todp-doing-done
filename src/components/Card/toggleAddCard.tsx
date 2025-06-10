@@ -87,3 +87,70 @@ export default function ToggleAddCard({
     </>
   );
 }
+
+
+// import { useEffect } from "react";
+// import Swal from "sweetalert2";
+// import { Dispatch, SetStateAction } from "react";
+// import toast, { Toaster } from "react-hot-toast";
+
+// type ToggleAddCardType = {
+//   cardName: string;
+//   setCardName: Dispatch<SetStateAction<string>>;
+//   handleAddCard: () => void;
+//   toggleFunction: () => void;
+// };
+
+// export default function ToggleAddCard({
+//   cardName,
+//   setCardName,
+//   handleAddCard,
+//   toggleFunction,
+// }: ToggleAddCardType) {
+
+
+  
+//   useEffect(() => {
+//     Swal.fire({
+//       title: "Enter list name",
+//       input: "text",
+//       inputValue: cardName,
+//       inputPlaceholder: "Enter list name...",
+//       confirmButtonText: "Add list",
+//       showCancelButton: true,
+//       cancelButtonText: "Cancel",
+//       confirmButtonColor: "#0c66e4",
+//       cancelButtonColor: "#d33",
+//       inputValidator: (value) => {
+//         if (!value.trim()) {
+//           return "Please enter a card name!";
+//         }
+//         return null;
+//       },
+//       didOpen: () => {
+//         const input = Swal.getInput();
+//         if (input) {
+//           input.addEventListener("keydown", (e) => {
+//             if (e.key === "Enter") {
+//               (document.querySelector(".swal2-confirm") as HTMLElement)?.click();
+//             }
+//           });
+//         }
+//       },
+//     }).then((result) => {
+//       if (result.isConfirmed) {
+//         const value = result.value?.trim();
+//         if (!value) {
+//           toast.error("Card name cannot be empty.");
+//           return;
+//         }
+//         setCardName(value);
+//         handleAddCard();
+//       } else {
+//         toggleFunction(); 
+//       }
+//     });
+//   }, []);
+
+//   return <Toaster position="top-center" reverseOrder={false} />;
+// }

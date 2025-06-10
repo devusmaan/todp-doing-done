@@ -24,6 +24,7 @@ import { SortableCard } from "@/dnd-kit/sortableCard";
 import TaskShown from "../Task/taskShowsinCard";
 import EditingTask from "../Task/editingTask";
 import AddAnotherTask from "../UI/addAnotherTask";
+import { RxCross2 } from "react-icons/rx";
 
 export interface Card {
   id: number;
@@ -51,7 +52,7 @@ interface CardListProps {
 export default function CardList({
   taskValue,
   setTaskValue,
-  selectedCard,
+  // selectedCard,
   setSelectedCard,
   handleAddTask,
   cards,
@@ -84,7 +85,13 @@ export default function CardList({
     setTaskOrder(tasks);
   }, [cards, tasks]);
 
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   const startEditingTask = (cardId: number, index: number) => {
     const fullTask = tasks[cardId][index];
@@ -217,6 +224,37 @@ export default function CardList({
     return overIndex >= 0 ? overIndex : cardTasks.length;
   };
 
+  const handleDeleteCard = (cardId: number, cardName: string) => {
+    Swal.fire({
+      title: "Delete Card?",
+      text: `Are you sure you want to delete "${cardName}" and all its tasks?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newCards = cards.filter((c) => c.id !== cardId);
+        const newTasks = { ...taskOrder };
+        delete newTasks[cardId];
+
+        setCards(newCards);
+        updateTasks(newTasks);
+
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: `Card "${cardName}" deleted`,
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+        });
+      }
+    });
+  };
+
   return (
     <>
       <DndContext
@@ -226,6 +264,7 @@ export default function CardList({
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
       >
+        {/* <div className="flex justify-evenly w-full"> */}
         <SortableContext
           items={cardOrder.map((id) => id.toString())}
           strategy={horizontalListSortingStrategy}
@@ -248,17 +287,26 @@ export default function CardList({
                       <h2 className="font-bold text-lg text-[#000000] wrap-anywhere sticky">
                         {card.name}
                       </h2>
+                      {!["Todo", "Doing", "Done"].includes(card.name) && (
+                        <button
+                          onClick={() => handleDeleteCard(card.id, card.name)}
+                          className="text-gray-600 hover:bg-[#bababa] p-1 my-1 text-sm rounded"
+                          title="Delete Card"
+                        >
+                          <RxCross2 className="text-lg" />
+                        </button>
+                      )}
                     </div>
 
                     <div
                       className="w-full px-2 overflow-y-auto 
-                    [&::-webkit-scrollbar]:w-2
-                    [&::-webkit-scrollbar-track]:rounded-sm
-                    [&::-webkit-scrollbar-thumb]:rounded-sm
-                  [&::-webkit-scrollbar-track]:bg-[white]
-                  [&::-webkit-scrollbar-thumb]:bg-[#dab0ed] hover:[&::-webkit-scrollbar-thumb]:bg-[#bb8cd0]
-                    transition-all duration-500 
-                    max-h-72"
+                            [&::-webkit-scrollbar]:w-2
+                            [&::-webkit-scrollbar-track]:rounded-sm
+                            [&::-webkit-scrollbar-thumb]:rounded-sm
+                          [&::-webkit-scrollbar-track]:bg-[white]
+                          [&::-webkit-scrollbar-thumb]:bg-[#dab0ed] hover:[&::-webkit-scrollbar-thumb]:bg-[#bb8cd0]
+                            transition-all duration-500 
+                            max-h-72"
                     >
                       <SortableContext
                         items={cardTasks}
@@ -333,11 +381,12 @@ export default function CardList({
             );
           })}
         </SortableContext>
+        {/* </div> */}
 
         {activeTaskId && (
           <DragOverlay>
             <div
-              className="bg-white text-sm rounded-lg p-3 shadow-lg transition break-words border-2 border-[#bb8cd0]"
+              className="bg-white text-black text-sm rounded-lg p-3 shadow-lg transition break-words border-2 border-[#bb8cd0]"
               style={{
                 opacity: 0.9,
               }}

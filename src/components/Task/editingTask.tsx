@@ -42,7 +42,7 @@ export default function EditingTask({
         type="text"
         value={editedValue}
         onChange={(e) => setEditedValue(e.target.value)}
-        className="p-2 border border-gray-300 rounded text-sm w-10/12"
+        className="p-2 border text-black border-gray-300 rounded text-sm w-10/12"
       />
       <button
         onMouseDown={() => setEditTask(null)}
